@@ -1,0 +1,19 @@
+
+
+18/7/2015
+Conversion factor for Litres of Jet A1 to Lbs has been corrected and now uses 1.83 lbs/litre.
+
+
+8/7/2015
+
+-LIALPA Tools has been renamed to CM3
+
+----New Features-------
+-The Following Features have been added:
+
+-The flight and duty time calculator has been added.
+As of this update the duty calculator supports only Rostered duties with our without delayed check in.
+
+Support for reserve duties followed by an FDP, hot reserves and extension of a duty by split duty to come soon
+
+

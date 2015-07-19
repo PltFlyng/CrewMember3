@@ -1,0 +1,95 @@
+<resources>
+    <string name="app_name">CM3</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_fuel_calc">FuelCalcActivity</string>
+    <string name="header_fuelcalc">Fuel Calculator</string>
+    <string name="button_fuelcalc_done">DONE</string>
+    <string name="label_fuelcalc_bowserReading">Bowser Reading:</string>
+    <string name="label_fuelcalc_bowseruplift_lbs">Bowser Fuel (Lbs):</string>
+    <string name="global_defaultnumval_zero">0</string>
+    <string name="label_header_toolspage">Tools</string>
+    <string name="button_label_tools_fuelcalc">Fuel Calculator</string>
+    <string name="label_crosswindcalc">HW / TW / XW </string>
+    <string name="label_fuelCalc">Fuel Calculator</string>
+    <string name="textview_label_tools_FDTL"><![CDATA[Flight & Duty Time]]></string>
+    <string name="button_text">Change Text</string>
+    <string name="text_label">Fragment Two</string>
+    <string name="button_fuelcalc_simple">Simple (Click for Advanced)</string>
+    <string name="button_fuelcalc_advanced">Advanced (Click for Simple)</string>
+    <string name="label_arrival_fuel">Arrival Fuel</string>
+    <string name="label_departure_fuel">Departure Fuel</string>
+    <string name="label_uplift_calc">Uplift</string>
+    <string name="label_bowser_calc">Bowser Calc.</string>
+    <string name="label_fuel_calc_difference">Difference:</string>
+    <string-array name="fuel_units_array">
+        <item>US. Gal</item>
+        <item>Litre</item>
+        <item>Imp. Gal</item>
+     </string-array>
+
+
+
+    <string-array name="sports_array">
+        <item>Shuttle Badminton</item>
+        <item>Tennis</item>
+        <item>FootBall</item>
+        <item>Basket Ball</item>
+        <item>Table Tennis</item>
+        <item>Chess</item>
+        <item>Hockey</item>
+    </string-array>
+
+    <string-array name="duty_types_array">
+        <item>Rostered Duty</item>
+        <item>Reserve / FDP</item>
+        <item>Hot Reserve / FDP</item>
+        <item>Split Duty (Rostered)</item>
+    </string-array>
+
+    <string-array name="number_sectors">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string name="title_activity_wind_component">WindComponentActivity</string>
+    <string name="header_windcalc_mainheader">Wind Component Calculator</string>
+    <string name="ui_windcomp_label_RwyHdg">Runway</string>
+    <string name="ui_windcomp_label_wind">Wind</string>
+    <string name="ui_windcomp_wind_label_dir">(Dir)</string>
+    <string name="ui_windcomp_labels_windspd">(Spd)</string>
+    <string name="ui_windcomp_label_resultHWTW">Wind (HW/TW):</string>
+    <string name="ui_windcomp_label_resultXW">XW(L/R):</string>
+    <string name="ui_button_home">Done</string>
+    <string name="title_activity_flight_duty_time_main">FlightDutyTimeMainActivity</string>
+    <string name="ui_label_fdpmain_header"><![CDATA[Flight & Duty Time Calculator]]></string>
+    <string name="ui_label_fdpmain_dutytype">Duty Type: </string>
+    <string name="textview_ui_label_duty_dutyStart">Duty Start:</string>
+    <string name="DutyUI_label_SignOn">Sign On:</string>
+    <string name="label_DutyUI_NumOfSectors">Sectors:</string>
+    <string name="textView_DutyUI_label_MaxFDP">Max FDP:</string>
+    <string name="textView_DutyUI_label_MaxDuty">Max Duty:</string>
+    <string name="DutyMainUI_label_header">Duty Calculator</string>
+    <string name="DutyUI_label_duty_limit">Duty Limit:</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="DutyMainUi_label_OrigReport">DutyMainUI_label_Origonal Checkin:</string>
+    <string name="textview_ui_main_welcome_label">Welcome to CM3 v1.1b</string>
+    <string name="title_activity_user_details">UserDetailsActivity</string>
+    <string name="user_data_label_usersName">Name:</string>
+    <string name="user_details_crewnetID">CrewNet ID:</string>
+    <string name="UserDetailsUI_label_crewnetPassword">CrewNet Password:</string>
+    <string name="buttontext_save_userdetails"><![CDATA[Save & Return]]></string>
+    <string name="title_activity_crew_net">CrewNetActivity</string>
+
+</resources>

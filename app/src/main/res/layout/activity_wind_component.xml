@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.danielhutchinson.lialpatools.WindComponentActivity"
+    android:orientation="vertical"
+    android:id="@+id/ui_windcom_mainLinear"
+    android:weightSum="1">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/header_windcalc_mainheader"
+        android:id="@+id/windcomp_textview_mainheader"
+        android:textSize="@dimen/abc_text_size_headline_material"
+        android:textAlignment="center"
+        android:layout_weight="0.06"
+        android:layout_gravity="right" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.06">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/ui_windcomp_label_RwyHdg"
+            android:id="@+id/textView"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="25dp" />
+
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/ui_windcompcalc_edittext_rwyhdg"
+            android:hint="090"
+            android:backgroundTint="#ffd9fffc"
+            android:editable="true"
+            android:layout_span="1"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/ui_windcomp_label_wind"
+        android:id="@+id/ui_windcomp_label_wind"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:layout_span="1"
+        android:layout_marginTop="20dp" />
+
+    <TableLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal">
+
+        <TableRow
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/ui_windcomp_edittext_winddir"
+                android:hint="090"
+                android:layout_weight="1" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/ui_windcomp_edittext_windVel"
+                android:layout_gravity="right"
+                android:hint="10"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ui_windcomp_wind_label_dir"
+                android:id="@+id/ui_windcomp_label_dir"
+                android:layout_weight="0.06" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ui_windcomp_labels_windspd"
+                android:id="@+id/ui_windcomp_label_spd"
+                android:layout_weight="0.06" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/ui_windcomp_label_resultHWTW"
+        android:id="@+id/ui_windcomp_result_hwtw" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/ui_windcomp_label_resultXW"
+        android:id="@+id/ui_windcomp_result_xw" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ui_button_home"
+        android:id="@+id/ui_windcomp_homebutton"
+        android:layout_weight="0.06"
+        android:onClick="HomeClick" />
+
+</LinearLayout>

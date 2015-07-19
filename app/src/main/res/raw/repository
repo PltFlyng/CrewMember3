@@ -1,0 +1,67 @@
+ public void Login_test() throws Exception {
+        String test_id = "6575"; //removed for this snippet
+        String test_pass = "HutchinsonD1984"; //removed for this snippet
+        String CrewnetUrl = "http://209.59.124.244/crewnet/login.aspx";
+        String viewstate = "dDwtMjAxNjc0MDEyMDt0PDtsPGk8MT47PjtsPHQ8O2w8aTwxPjs+O2w8dDw7bDxpPDE+Oz47bDx0PDtsPGk8MT47PjtsPHQ8cDxsPHNyYzs+O2w8Li9ncmFwaGljcy9ibGFua2xvZ29ubG9nby5naWY7Pj47Oz47Pj47Pj47Pj47Pj47PoFjQ5nqGE+ozvmbjaYL4fJy99fs";
+        String Home_url = "http://209.59.124.244/crewnet/home.aspx";
+
+        Log.d("Http body :", "Test");
+
+       String final_url = URLEncoder.encode(CrewnetUrl, "UTF-8");
+
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+
+        HttpGet httpget = new HttpGet(CrewnetUrl);
+
+        HttpResponse response = httpclient.execute(httpget);
+        HttpEntity entity = response.getEntity();
+
+        System.out.println("Login form get: " + response.getStatusLine());
+        if (entity != null) {
+            entity.consumeContent();
+        }
+        System.out.println("Initial set of cookies:");
+        List<Cookie> cookies = httpclient.getCookieStore().getCookies();
+        if (cookies.isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (int i = 0; i < cookies.size(); i++) {
+                System.out.println("- " + cookies.get(i).toString());
+            }
+        }
+
+        HttpPost httpost = new HttpPost(CrewnetUrl);
+
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        nvps.add(new BasicNameValuePair("txtUserName", test_id));
+        nvps.add(new BasicNameValuePair("txtPassword", test_pass));
+        nvps.add(new BasicNameValuePair("cmdLogon", "Log in"));
+        nvps.add(new BasicNameValuePair("__VIEWSTATE=", viewstate));
+
+
+        httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+
+        response = httpclient.execute(httpost);
+        entity = response.getEntity();
+
+        System.out.println("Login form get: " + response.getStatusLine());
+        if (entity != null) {
+            entity.consumeContent();
+        }
+
+        System.out.println("Post logon cookies:");
+        cookies = httpclient.getCookieStore().getCookies();
+        if (cookies.isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (int i = 0; i < cookies.size(); i++) {
+                System.out.println("- " + cookies.get(i).toString());
+            }
+        }
+
+        // When HttpClient instance is no longer needed,
+        // shut down the connection manager to ensure
+        // immediate deallocation of all system resources
+        httpclient.getConnectionManager().shutdown();
+
+    }

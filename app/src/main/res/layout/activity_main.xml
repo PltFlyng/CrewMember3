@@ -1,0 +1,202 @@
+
+
+    <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabHost_main"                                                                                                                           >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center">
+                </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <LinearLayout
+                    android:id="@+id/tab_mainSplash"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/textview_ui_main_welcome_label"
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <WebView
+                        android:layout_width="match_parent"
+                        android:layout_height="261dp"
+                        android:id="@+id/webView" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab_tools"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/label_header_toolspage"
+                        android:id="@+id/header_toolspage"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp" />
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="0dp"
+                            android:showDividers="middle"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp">
+
+                            <ImageButton
+                                android:layout_width="129dp"
+                                android:layout_height="129dp"
+                                android:id="@+id/imagebutton_tools_windcalc"
+                                android:background="@drawable/crosswind_icon"
+                                android:layout_marginLeft="0dp"
+                                android:onClick="WindComponentClick" />
+
+                            <ImageButton
+                                android:layout_width="129dp"
+                                android:layout_height="129dp"
+                                android:id="@+id/button_tools_fuelcalc"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fuel_uplift"
+                                android:onClick="FuelClick"
+                                android:layout_marginLeft="50dp"
+                                android:clickable="false"
+                                android:soundEffectsEnabled="true" />
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:weightSum="1"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="129dp"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/label_crosswindcalc"
+                                android:id="@+id/textview_label_tools_windcalc"
+                                android:layout_weight="0.06" />
+
+                            <TextView
+                                android:layout_width="129dp"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/label_fuelCalc"
+                                android:id="@+id/textview_label_tools_fuelcalc"
+                                android:layout_marginLeft="50dp"
+                                android:gravity="left" />
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="6dp"
+                            android:layout_gravity="left"
+                            android:gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp">
+
+                            <ImageButton
+                                android:layout_width="129dp"
+                                android:layout_height="129dp"
+                                android:id="@+id/imagebutton_tools_fdtl"
+                                android:background="@drawable/duty_time_icon"
+                                android:onClick="FlightDutyClick" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="129dp"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/textview_label_tools_FDTL"
+                                android:id="@+id/textview_label_tools_fdtl"
+                                android:textAllCaps="false"
+                                android:textAlignment="center"
+                                android:singleLine="false"
+                                android:autoText="false"
+                                android:layout_gravity="center_horizontal"
+                                android:gravity="center"
+                                android:onClick="FlightDutyClick" />
+                        </TableRow>
+                    </TableLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab_rosters_advices"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:textAlignment="center">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CrewNet"
+                                android:id="@+id/button_ui_MyLifeTabMain_crewnet"
+                                android:onClick="CrewnetClick" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab_documents"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" />
+            </FrameLayout>
+
+        </LinearLayout>
+    </TabHost>
+
+
