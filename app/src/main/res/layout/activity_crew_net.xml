@@ -42,6 +42,13 @@
                 android:layout_height="wrap_content"
                 android:text="DLD Crew Brief"
                 android:id="@+id/button_crewnet_test_crewbrief" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Advice Test"
+                android:id="@+id/button_advice_test"
+                android:layout_column="1" />
         </TableRow>
 
         <TableRow

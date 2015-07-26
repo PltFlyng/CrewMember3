@@ -53,25 +53,20 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.client.methods.HttpGet;
 
+import javax.xml.transform.Result;
+
+import static com.example.danielhutchinson.lialpatools.CrewAdvice.*;
+
 public class CrewNetActivity extends ActionBarActivity {
 
-    public static final int DIALOG_DOWNLOAD_PROGRESS = 1;
-    private Button DldRosterBtn;
-    private Button localRosterBtn;
-    private ProgressDialog progressDialog;
-    private String file_storage_string = "sdcard/";
-    private String curr_roster_filename = "downloaded_test_crewbrief.pdf";
+
     Button Login;
+    Button Advice_test;
     //for testing will resolve later
-    private String Roster_fullpath = file_storage_string+curr_roster_filename;
-
-    private String dld_string = "http://209.59.124.244/crewnet/forms/ReportCreator.aspx?ReportName=CrewBriefingReport?FlightPlanKeys=";
 
 
-    private void startDownload(String url) {
-        //String url = "https://bitcoin.org/bitcoin.pdf";
-        new DownloadFileAsync().execute(url);
-    }
+
+
 
 
 
@@ -94,14 +89,27 @@ public class CrewNetActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //do stuff
-                startDownload(dld_string);
+                //CrewNetFunctions.CrewNetMasterControl();
+                new myCrewnetTestTask().execute();
                 //end of that stuff
             }
 
 
         });
 
-    }
+        Advice_test = (Button) findViewById(R.id.button_advice_test);
+        Advice_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CrewAdvice.CrewAdviceControl();
+
+            }
+        });
+
+
+
+    }//end of the on create
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,158 +134,26 @@ public class CrewNetActivity extends ActionBarActivity {
     }
 
 
+    private class myCrewnetTestTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
 
-    @Override
-    @Deprecated
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        switch (id) {
-            case DIALOG_DOWNLOAD_PROGRESS:
-                progressDialog = new ProgressDialog(this);
-                progressDialog.setMessage("Downloading file...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-                return progressDialog;
-            default:
-                return null;
         }
-    }
-
-
-
-
-
-
-
-    class DownloadFileAsync extends AsyncTask<String, String, String> {
 
         @Override
-        protected String doInBackground(String... params) {
-            // TODO Auto-generated method stub
-            int count;
-
-            String test_id = "6575"; //removed for this snippet
-            String test_pass ="HutchinsonD1984"; //removed for this snippet
-            String CrewnetUrl = "http://209.59.124.244/crewnet/login.aspx";
-            String viewstate = "dDwtMjAxNjc0MDEyMDt0PDtsPGk8MT47PjtsPHQ8O2w8aTwxPjs+O2w8dDw7bDxpPDE+Oz47bDx0PDtsPGk8MT47PjtsPHQ8cDxsPHNyYzs+O2w8Li9ncmFwaGljcy9ibGFua2xvZ29ubG9nby5naWY7Pj47Oz47Pj47Pj47Pj47Pj47PoFjQ5nqGE+ozvmbjaYL4fJy99fs";
-            String Home_url = "http://209.59.124.244/crewnet/home.aspx";
-
-            CookieManager cookieManager = new CookieManager();
-            //CookieHandler.setDefault(cookieManager);
-            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-
-
-
-            try {
-                URL login_url = new URL("http://209.59.124.244/crewnet/login.aspx");
-                HttpURLConnection httpConn = (HttpURLConnection) login_url.openConnection();
-                httpConn.setReadTimeout(10000);
-                httpConn.setConnectTimeout(15000);
-                httpConn.setRequestMethod("POST");
-                httpConn.setDoInput(true);
-                httpConn.setDoOutput(true);
-
-//build the login string
-                Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter("txtUserName", test_id)
-                        .appendQueryParameter("txtPassword", test_pass)
-                        .appendQueryParameter("cmdLogon", "Log in")
-                        .appendQueryParameter("__VIEWSTATE=", viewstate);
-                String login_query = builder.build().getEncodedQuery();
-//end of login user string construction
-
-                OutputStream os = httpConn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(login_query);
-                writer.flush();
-                writer.close();
-                os.close();
-
-                httpConn.connect();
-                for (Map.Entry<String, List<String>> k : httpConn.getHeaderFields().entrySet()) {
-                    for (String v : k.getValue()){
-                        System.out.println(k.getKey() + ":" + v);
-                    }
-                }
-
-
-                BufferedReader reader;
-                String serverresponse = httpConn.getResponseMessage();
-                StringBuilder SB = new StringBuilder();
-                reader = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null)
-                {
-                    SB.append(line + "\n");
-                }
-                reader.close();
-                Log.d("Http response", SB.toString());
-//end of login and get session id
-
-
-
-                //now getthefile
-                httpConn.setReadTimeout(10000);
-                httpConn.setConnectTimeout(15000);
-                httpConn.setRequestMethod("GET");
-                httpConn.setDoInput(true);
-                httpConn.setDoOutput(true);
-                //HttpURLConnection httpConn = (HttpURLConnection) login_url.openConnection();
-                URL url = new URL(params[0]);
-                httpConn = (HttpURLConnection) url.openConnection();
-                //URLConnection conexion = url.openConnection();
-                //conexion.connect();
-                httpConn.connect();
-
-                int lengthofFile = httpConn.getContentLength();
-                Log.d("ANDRO_ASYNC", "Length of file: " + lengthofFile);
-
-                InputStream input = new BufferedInputStream(url.openStream());
-                OutputStream output = new FileOutputStream(Roster_fullpath);
-
-                byte data[] = new byte[1024];
-
-                long total = 0;
-
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-                    publishProgress("" + (int) ((total * 100) / lengthofFile));
-                    output.write(data, 0, count);
-                }
-
-                output.flush();
-                output.close();
-                input.close();
-                //view_pdf(Roster_fullpath);
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
+        protected Void doInBackground(Void... params) {
+            // Runs on the background thread
+            CrewNetFunctions.CrewNetMasterControl();
             return null;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            // TODO Auto-generated method stub
-            dismissDialog(DIALOG_DOWNLOAD_PROGRESS);
-        }
+        protected void onPostExecute(Void res) {
 
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-            showDialog(DIALOG_DOWNLOAD_PROGRESS);
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            // TODO Auto-generated method stub
-            Log.d("ANDRO_ASYNC", values[0]);
-            progressDialog.setProgress(Integer.parseInt(values[0]));
         }
 
     }
+
 
 
 

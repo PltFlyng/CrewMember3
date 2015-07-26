@@ -1,0 +1,80 @@
+public static String Login() throws IOException {
+        String test_id = "6575"; //removed for this snippet
+        String test_pass = "HutchinsonD1984"; //removed for this snippet
+        String CrewnetUrl = "http://209.59.124.244/crewnet/login.aspx";
+        String viewstate = "dDwtMjAxNjc0MDEyMDt0PDtsPGk8MT47PjtsPHQ8O2w8aTwxPjs+O2w8dDw7bDxpPDE+Oz47bDx0PDtsPGk8MT47PjtsPHQ8cDxsPHNyYzs+O2w8Li9ncmFwaGljcy9ibGFua2xvZ29ubG9nby5naWY7Pj47Oz47Pj47Pj47Pj47Pj47PoFjQ5nqGE+ozvmbjaYL4fJy99fs";
+        String Home_url = "http://209.59.124.244/crewnet/home.aspx";
+
+
+        String https_url = "https://ssl.filmweb.pl/j_login";
+        https_url = CrewnetUrl;
+        URL url = new URL(CrewnetUrl);
+        String post ="__VIEWSTATE=dDwtMjAxNjc0MDEyMDt0PDtsPGk8MT47PjtsPHQ8O2w8aTwxPjs2BO2w8dDw7bDxpPDE2BOz47bDx0PDtsPGk8MT47PjtsPHQ8cDxsPHNyYzs2BO2w8Li9ncmFwaGljcy9ibGFua2xvZ29ubG9nby5naWY7Pj47Oz47Pj47Pj47Pj47Pj47PoFjQ5nqGE2BozvmbjaYL4fJy99fs&txtUserName=6575&txtPassword=HutchinsonD1984&cmdLogon=Log+In";
+
+        //String post = "_login_redirect_url=http%253A%252F%252Fwww.filmweb.pl%252F&j_username=test.filmweb%40gmail.com&j_password=test.filmweb&_rememberMe=on&pass=zaloguj";
+
+        Uri.Builder builder = new Uri.Builder()
+                .appendQueryParameter("__VIEWSTATE=", viewstate)
+                .appendQueryParameter("txtUserName", test_id)
+                .appendQueryParameter("txtPassword", test_pass)
+                .appendQueryParameter("cmdLogon", "Log in");
+
+        String query = builder.build().getEncodedQuery();
+        post = query;
+
+
+        System.out.println("Post string to pass is" + post);
+
+
+        URLConnection conn1 = url.openConnection();
+
+
+        System.out.println("initial cookie" + conn1.getHeaderField("Set-Cookie"));
+        String cookie_string = conn1.getHeaderField("Set-Cookie").toString();
+        System.out.println("The string value of the cookie is " + cookie_string);
+        //ASP.NET_SessionId=4wgxf1u4oddebu45madp2lit; path=/
+        String CookieMainParts[] = cookie_string.split(";");
+        String[] CookieNameValue = CookieMainParts[0].split("=");
+        String[] CookiePath = CookieMainParts[1].split("=");
+        String Cookie_string_toset = CookieMainParts[0] + ";" + CookieMainParts[1];
+
+//connect and log in
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setInstanceFollowRedirects(true);
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Host", "209.59.124.244");
+        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.107 Safari/537.36");
+        con.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        //con.setRequestProperty("Accept-Language", "pl,en-u   s;q=0.7,en;q=0.3");
+        con.setRequestProperty("Accept-Encoding", "gzip, deflate, sdch");
+        con.setRequestProperty("Connection", "keep-alive");
+        con.setRequestProperty("Referer", "http://209.59.124.244/crewnet/login.aspx");
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setRequestProperty("X-Client-Data", "CIm2yQEIorbJAQiptskBCMS2yQEI8YjKAQjhlMoBCP2VygE=");
+
+        con.setRequestProperty("Content-Length", post.length() + "");
+        con.setRequestProperty("Cookie", Cookie_string_toset);
+
+
+        OutputStream os = con.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(os, "UTF-8"));
+        writer.write(post);
+        writer.flush();
+        writer.close();
+        os.close();
+
+        con.connect();
+
+        System.out.println("The Returned Header Fields");
+        for (Map.Entry<String, List<String>> k : con.getHeaderFields().entrySet()) {
+            for (String v : k.getValue()) {
+                System.out.println(k.getKey() + ":" + v);
+            }
+        }
+
+
+        return Cookie_string_toset;
+    }//end of the login method
