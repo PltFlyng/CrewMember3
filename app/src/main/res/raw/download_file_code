@@ -1,0 +1,15 @@
+ InputStream in = entity2.getContent();
+           File path = new File("sdcard/");
+           //path.mkdirs();
+           File file = new File(path, "todaytest_crewbrief.pdf");
+           FileOutputStream fos = new FileOutputStream(file);
+
+           byte[] buffer = new byte[1024];
+           int len1 = 0;
+           while ((len1 = in.read(buffer)) != -1) {
+               fos.write(buffer, 0, len1);
+           }
+
+           fos.close();
+
+           httpclient.getConnectionManager().shutdown();

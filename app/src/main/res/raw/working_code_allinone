@@ -1,4 +1,3 @@
-
 package com.example.danielhutchinson.lialpatools;
 /**
  * Created by Daniel on 7/25/2015.
@@ -9,6 +8,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import org.apache.http.Header;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
@@ -17,11 +17,14 @@ import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,6 +50,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -57,9 +61,12 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class CrewNetFunctions {
 
-    public static String[] Login() throws IOException {
+    public static final String DailyBrief_query = "/forms/ReportCreator.aspx?ReportName=CrewBriefingReport?FlightPlanKeys=";
+    public static final String BaseUrl = "http://209.59.124.244/crewnet";
 
-        //persistent variables
+       public static String[] Login() throws IOException {
+
+           //persistent variables
         String test_id = "6575"; //removed for this snippet
         String test_pass = "HutchinsonD1984"; //removed for this snippet
         String CrewnetUrl = "http://209.59.124.244/crewnet/login.aspx";
@@ -68,11 +75,13 @@ public class CrewNetFunctions {
         String Cookie_string_toset = "";
         String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
 
-        //end of variables
+
+
+           //end of variables
 
         //Login Portion
-        //Contact the server, get a session ID
-        //login obtain cookies
+           //Contact the server, get a session ID
+           //login obtain cookies
         HttpClient httpClient = new DefaultHttpClient();
 
 
@@ -106,15 +115,33 @@ public class CrewNetFunctions {
 
         HttpResponse response = (HttpResponse) httpClient.execute(httpPost,localContext);
         HttpEntity entity = response.getEntity();
-
+        if (entity != null) {
+            InputStream instream = entity.getContent();
+            try {
+                // process content
+            } finally {
+                instream.close();
+                entity.consumeContent();
+            }
+        }
         String Cookie1 = localContext.getAttribute(ClientContext.COOKIE_STORE).toString();
+
 
 
         List<Cookie> cookies = cookieStore.getCookies();  //to be removed pending clean up
 
+        //set headers for the post request
+        localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+        HttpPost httppost = new HttpPost(CrewnetUrl);
+        httppost.setHeader("Host", "209.59.124.244");
+        httppost.setHeader("Referer", "http://209.59.124.244/Crewnet/login.aspx");
+        httppost.setHeader("User-Agent", USER_AGENT);
+
+        response = httpClient.execute(httppost, localContext);
+
         String headers = response.getAllHeaders().toString();
 
-
+        entity = response.getEntity();
         if (entity != null) {
             InputStream  instream = entity.getContent();
             try {
@@ -149,8 +176,6 @@ public class CrewNetFunctions {
         //log debug demarking end of login portion
         Log.d("APP Trace", "End Login Test");
 
-        //------other functions begin here----------
-
 
         String CookieString_parts[] = Cookie_strings[0].split(":");
         String CookieString1 = CookieString_parts[0] + "=" + CookieString_parts[1] + "; path=" + CookieString_parts[2];
@@ -162,23 +187,24 @@ public class CrewNetFunctions {
         BasicClientCookie cookie2 = new BasicClientCookie("Name", "value");
         cookie2 = new BasicClientCookie(CookieString_parts2[0], CookieString_parts2[1]);
 
+     //------other functions begin here-----------------------------------------------------------------------
 
+        String DailyBrief_url = BaseUrl + DailyBrief_query;
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
         localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
+           httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1); //added code
 
-        HttpGet httpget = new HttpGet(Home_url);
+        HttpGet httpget = new HttpGet(DailyBrief_url);
 
+        //set up the various params and the headers and cookies
         httpget.setHeader("Host", "209.59.124.244");
-        httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/login.aspx");
+        httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/forms/default.aspx");
         httpget.addHeader("User-Agent", USER_AGENT);
 
         httpget.addHeader("Cookie", CookieString1);
         httpget.addHeader("Cookie", CookieString2);
-
-
-
 
 //cookie.setDomain("your domain");
         cookie1.setPath("/");
@@ -189,28 +215,26 @@ public class CrewNetFunctions {
         localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
         httpclient.setCookieStore(cookieStore);
 
-
+//do the get and get the response
         HttpResponse homeresponse = httpclient.execute(httpget, localContext);
-        entity = homeresponse.getEntity();
+        HttpEntity entity2 = homeresponse.getEntity();
+           String DESTINATION_PATH ="sdcard/downloaded_test_crewbrief.pdf";
 
-        String responseBody = "";
-        responseBody = EntityUtils.toString(homeresponse.getEntity());
+           InputStream in = entity2.getContent();
+           File path = new File("sdcard/");
+           //path.mkdirs();
+           File file = new File(path, "todaytest_crewbrief.pdf");
+           FileOutputStream fos = new FileOutputStream(file);
 
-        // write response to log
-        Log.d("Headers", "---------------------------headers--------------------");
+           byte[] buffer = new byte[1024];
+           int len1 = 0;
+           while ((len1 = in.read(buffer)) != -1) {
+               fos.write(buffer, 0, len1);
+           }
 
-        Header[] homeheaders = response.getAllHeaders();
-        for (Header header : homeheaders) {
-            System.out.println("Key : " + header.getName()
-                    + " ,Value : " + header.getValue());
-        }
+           fos.close();
 
-
-        Log.d("Headers", "---------------------------headers--------------------");
-        Log.d("Http get Response:", homeresponse.toString());
-
-        Log.d("Http body :", responseBody);
-
+           httpclient.getConnectionManager().shutdown();
 
 
 
@@ -218,7 +242,10 @@ public class CrewNetFunctions {
 
     }//end of the login method
 
+public static void GetCrewBrief(String [] SessionCookies) throws IOException
+{
 
+}
 
 
     public static void CrewNetMasterControl()
@@ -229,6 +256,13 @@ public class CrewNetFunctions {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            GetCrewBrief(SessionCookies);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //now that we got the session cookie we can do try to do stuff
         //LoadHomePage(SessionCookies);
 
