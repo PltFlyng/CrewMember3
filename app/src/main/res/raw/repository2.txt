@@ -1,3 +1,8 @@
+
+
+EntityUtils.consume(HttpEntity)
+
+
 public static String Login() throws IOException {
         String test_id = "6575"; //removed for this snippet
         String test_pass = "HutchinsonD1984"; //removed for this snippet
