@@ -91,5 +91,6 @@
     <string name="UserDetailsUI_label_crewnetPassword">CrewNet Password:</string>
     <string name="buttontext_save_userdetails"><![CDATA[Save & Return]]></string>
     <string name="title_activity_crew_net">CrewNetActivity</string>
+    <string name="firstRun_popup_welcomemsg_generic">Welcome to CM3</string>
 
 </resources>

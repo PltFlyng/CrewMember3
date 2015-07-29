@@ -3,6 +3,8 @@ package com.example.danielhutchinson.lialpatools;
 /**
  * Created by Daniel on 7/25/2015.
  */
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -60,6 +62,11 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class CrewNetFunctions {
+
+    private ProgressDialog progressDialog;
+    private String file_storage_string = "sdcard/";
+    public static final int DIALOG_DOWNLOAD_PROGRESS = 1;
+
     public static final String test_id = "6575"; //removed for this snippet
     public static final String test_pass = "HutchinsonD1984"; //removed for this snippet
     public static final String CrewnetBase = "http://209.59.124.244/crewnet";
@@ -69,6 +76,12 @@ public class CrewNetFunctions {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
     public static final String CrewBrief_Request = CrewnetBase + "/forms/ReportCreator.aspx?ReportName=CrewBriefingReport?FlightPlanKeys=";
     public static final String ReportViewer_base = CrewnetBase + "/ReportViewer.aspx?report=";
+
+
+
+
+
+
 
 
     public static String[] MatchStaffNum(String StaffNum, String txt)

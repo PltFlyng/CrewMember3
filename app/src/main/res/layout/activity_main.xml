@@ -31,7 +31,7 @@
                     <TextView
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="@string/textview_ui_main_welcome_label"
-                        android:id="@+id/textView2"
+                        android:id="@+id/textView_mainUI_WelcomeMsgTOPheader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 

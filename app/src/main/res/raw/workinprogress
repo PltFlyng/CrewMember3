@@ -1,4 +1,5 @@
 
+
 package com.example.danielhutchinson.lialpatools;
 /**
  * Created by Daniel on 7/25/2015.
@@ -22,6 +23,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -71,7 +74,6 @@ public class CrewNetFunctions {
 
     public static String[] MatchStaffNum(String StaffNum, String txt)
     {
-        //String txt="<script> win = window.open(\"ReportViewer.aspx?report=CrewBriefingReport_1655914080_6575.pdf\",\"ReportViewer\",\"toolbar=no,menubar=no,location=no,directories=no,scrollbars,channelmode=yes,fullscreen=yes\");location.href='./../home.aspx';</script>";
         String MatchFound = "false";
         String[] ReturnArray = new String [3];
         ReturnArray[0] = MatchFound;
@@ -90,7 +92,10 @@ public class CrewNetFunctions {
         {
             String int1=m.group(1);
             String int2=m.group(2);
+            //print some test output for the log
             System.out.print("("+int1.toString()+")"+"("+int2.toString()+")"+"\n");
+            //end of test output
+
             MatchFound = "true";
             ReturnArray[0] = MatchFound;
             ReturnArray[1] = int1;
@@ -220,69 +225,68 @@ public class CrewNetFunctions {
         //log debug demarking end of login portion
         Log.d("APP Trace", "End Login Test");
 
-        //------other functions begin here------------------------------
-switch (Operation) {
-    case "CrewBrief":
-    String CookieString_parts[] = Cookie_strings[0].split(":");
-    String CookieString1 = CookieString_parts[0] + "=" + CookieString_parts[1] + "; path=" + CookieString_parts[2];
-    cookie1 = new BasicClientCookie("Name", "value");
-    cookie1 = new BasicClientCookie(CookieString_parts[0], CookieString_parts[1]);
+        //------cooke placement for other functions begins here------------------------------
+        String CookieString_parts[] = Cookie_strings[0].split(":");
+        String CookieString1 = CookieString_parts[0] + "=" + CookieString_parts[1] + "; path=" + CookieString_parts[2];
+        cookie1 = new BasicClientCookie("Name", "value");
+        cookie1 = new BasicClientCookie(CookieString_parts[0], CookieString_parts[1]);
 
-    String CookieString_parts2[] = Cookie_strings[1].split(":");
-    String CookieString2 = CookieString_parts2[0] + "=" + CookieString_parts2[1] + "; path=" + CookieString_parts2[2];
-    BasicClientCookie cookie2 = new BasicClientCookie("Name", "value");
-    cookie2 = new BasicClientCookie(CookieString_parts2[0], CookieString_parts2[1]);
+        String CookieString_parts2[] = Cookie_strings[1].split(":");
+        String CookieString2 = CookieString_parts2[0] + "=" + CookieString_parts2[1] + "; path=" + CookieString_parts2[2];
+        BasicClientCookie cookie2 = new BasicClientCookie("Name", "value");
+        cookie2 = new BasicClientCookie(CookieString_parts2[0], CookieString_parts2[1]);
 
-
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-
-
-    HttpGet httpget = new HttpGet(CrewBrief_Request);
-
-    httpget.setHeader("Host", "209.59.124.244");
-    httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
-    httpget.addHeader("User-Agent", USER_AGENT);
-
-    httpget.addHeader("Cookie", CookieString1);
-    httpget.addHeader("Cookie", CookieString2);
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
 
 //cookie.setDomain("your domain");
-    cookie1.setPath("/");
-    cookie2.setPath("/");
+        cookie1.setPath("/");
+        cookie2.setPath("/");
 
-    cookieStore.addCookie(cookie1);
-    cookieStore.addCookie(cookie2);
-    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-    httpclient.setCookieStore(cookieStore);
+        cookieStore.addCookie(cookie1);
+        cookieStore.addCookie(cookie2);
+        localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+        httpclient.setCookieStore(cookieStore);
+ // end of cookie placement for subsequent requests-----------------------------------------------------------------------------------
 
-
-    HttpResponse homeresponse = httpclient.execute(httpget, localContext);
-    entity = homeresponse.getEntity();
-
-    String responseBody = "";
-    responseBody = EntityUtils.toString(homeresponse.getEntity());
-
-    // write response to log
-    Log.d("Headers", "---------------------------headers--------------------");
-
-    Header[] homeheaders = response.getAllHeaders();
-    for (Header header : homeheaders) {
-        System.out.println("Key : " + header.getName()
-                + " ,Value : " + header.getValue());
-    }
+switch (Operation) {
+    case "CrewBrief":
 
 
-    Log.d("Headers", "---------------------------headers--------------------");
-    Log.d("Http get Response:", homeresponse.toString());
+        HttpGet httpget = new HttpGet(CrewBrief_Request);
 
-    //Log.d("Http body :", responseBody);
+        httpget.setHeader("Host", "209.59.124.244");
+        httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
+        httpget.addHeader("User-Agent", USER_AGENT);
+
+        httpget.addHeader("Cookie", CookieString1);
+        httpget.addHeader("Cookie", CookieString2);
+
+        HttpResponse homeresponse = httpclient.execute(httpget, localContext);
+             entity = homeresponse.getEntity();
+        String responseBody = "";
+             responseBody = EntityUtils.toString(homeresponse.getEntity());
+
+//for debug testing write response to log
+                Log.d("Headers", "---------------------------headers--------------------");
+
+                Header[] homeheaders = response.getAllHeaders();
+                for (Header header : homeheaders) {
+                     System.out.println("Key : " + header.getName()
+                      + " ,Value : " + header.getValue());
+                }
+               Log.d("Headers", "---------------------------headers--------------------");
+               Log.d("Http get Response:", homeresponse.toString());
+              //Log.d("Http body :", responseBody);
+//end of debug testing block
+
+    entity.consumeContent();
 
     String[] Body_strings = responseBody.split("\n");
-
     String[] CrewBriefLocator = {"false", "0", "0"};
 
+    //split the response body into lines that we can use to parse for the report indicator
     for (int x = 0; x <= Body_strings.length - 1; x++) {
         //System.out.println(Body_strings[x]);
 
@@ -295,8 +299,60 @@ switch (Operation) {
         }
 
     }
-        System.out.println("TESTTTTTT");
-    String CrewbriefReportRequest = ReportViewer_base + "CrewBriefingReport_" + CrewBriefLocator[1] + "_" + CrewBriefLocator[2] + ".pdf";
+    //report pointer url is created
+        String CrewbriefReportRequest = "none";
+    if (CrewBriefLocator[0].equals("true")) {
+        CrewbriefReportRequest = "http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_" + CrewBriefLocator[1] + "_" + CrewBriefLocator[2] + ".pdf";
+    } else {CrewbriefReportRequest = "none";}
+
+    if (!CrewbriefReportRequest.equals("none"))
+    {
+        //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
+        System.out.println("request url is " + CrewbriefReportRequest);
+
+        HttpGet reporthttpget = new HttpGet(CrewbriefReportRequest);
+        //Post Data
+        List<NameValuePair> CBnameValuePair = new ArrayList<NameValuePair>(4);
+        CBnameValuePair.add(new BasicNameValuePair("__VIEWSTATE", "dDwtNjE4MTAxMzgwOzs+mx+tMJxpkDyVNRQqrIe3HPBGFug="));
+        CBnameValuePair.add(new BasicNameValuePair("cmdExport", "Export"));
+
+
+        //Encode POST data
+        //reporthttpget.setEntity(new UrlEncodedFormEntity(CBnameValuePair)); //this is for post only
+
+        reporthttpget.setHeader("Host", "209.59.124.244");
+        reporthttpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
+        reporthttpget.addHeader("User-Agent", USER_AGENT);
+
+        reporthttpget.addHeader("Cookie", CookieString1);
+        reporthttpget.addHeader("Cookie", CookieString2);
+
+        HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
+        HttpEntity reportentity = reportresponse.getEntity();
+
+        String DESTINATION_PATH ="sdcard/downloaded_test_crewbrief.pdf";
+
+        InputStream in = reportentity.getContent();
+        File path = new File("sdcard/");
+        //path.mkdirs();
+        File file = new File(path, "test_crewbrief.pdf");
+        FileOutputStream fos = new FileOutputStream(file);
+
+        byte[] buffer = new byte[1024];
+        int len1 = 0;
+        while ((len1 = in.read(buffer)) != -1) {
+            fos.write(buffer, 0, len1);
+        }
+
+        fos.close();
+
+        httpclient.getConnectionManager().shutdown();
+
+
+
+    }
+
+
 
 break;
 
