@@ -181,8 +181,8 @@ public void FirstRun() {
         // the key does not exist
         //display in long period of time
         //Toast.makeText(getApplicationContext(), "First Run!!!", Toast.LENGTH_LONG).show();
-        FirstRunToast();
-        //loadingPopup();   //--endable once popup code is fixed
+        //FirstRunToast();
+        loadingPopup();   //--endable once popup code is fixed
 
         //code to be run on first run of the app
         GlobalManagement.SetupAppGlobals();
@@ -239,7 +239,7 @@ public void FirstRun() {
        private void loadingPopup() {
            LayoutInflater inflater = this.getLayoutInflater();
            final View layout = inflater.inflate(R.layout.popup_welcome, null);
-           final Button DismissButton = (Button) findViewById(R.id.button_welcomepopup_dismiss);
+           final Button DismissButton = (Button) layout.findViewById(R.id.button_welcomepopup_dismiss);
            final PopupWindow Welcome_popupWindow = new PopupWindow(layout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
 
            Welcome_popupWindow.setFocusable(false);

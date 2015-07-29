@@ -1,6 +1,7 @@
 package com.example.danielhutchinson.lialpatools;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -44,7 +46,8 @@ public class UserDetailsActivity extends ActionBarActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                String UsersNameString = UsersName.getText().toString();
+                savePreferences("UsersName", UsersNameString);
             }
 
             @Override
@@ -54,7 +57,52 @@ public class UserDetailsActivity extends ActionBarActivity {
             }
         });
 
+
+        User_crewNetId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String UsersCrewNetIDString = User_crewNetId.getText().toString();
+                savePreferences("UsersCrewNetId", UsersCrewNetIDString);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String UsersCrewNetIDString = User_crewNetId.getText().toString();
+                savePreferences("UsersCrewNetId", UsersCrewNetIDString);
+            }
+        });
+
+        User_crewNetPass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String UsersCrewNetPassString = User_crewNetId.getText().toString();
+                savePreferences("UsersCrewNetPass", UsersCrewNetPassString);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String UsersCrewNetPassString = User_crewNetId.getText().toString();
+                savePreferences("UsersCrewNetPass", UsersCrewNetPassString);
+            }
+        });
+
+
     }
+
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,8 +129,13 @@ public class UserDetailsActivity extends ActionBarActivity {
 
     public void loadSavedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = sharedPreferences.getString("UsersName", "test");
+        String name = sharedPreferences.getString("UsersName", null);
+        String CrewNetId = sharedPreferences.getString("UsersCrewNetId", null);
+        String CrewNetPass = sharedPreferences.getString("UsersCrewNetPass", null);
+
         UsersName.setText(name);
+        User_crewNetId.setText(CrewNetId);
+        User_crewNetPass.setText(CrewNetPass);
 
     }
 
@@ -93,6 +146,10 @@ public class UserDetailsActivity extends ActionBarActivity {
         editor.commit();
     }
 
-
+    public void HomeClick(View view) {
+        //Intent intent = new Intent(mai.this, ToActivity.class);
+        Intent newintent = new Intent(UserDetailsActivity.this, MainActivity.class);
+        startActivity(newintent);
+    }
 }//end of the main class
 

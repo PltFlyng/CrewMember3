@@ -26,10 +26,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:ems="10"
                 android:id="@+id/editText_user_details_usersName"
-                android:layout_column="1" />
+                android:layout_column="1"
+                android:layout_span="1"
+                android:enabled="true"
+                android:ems="14" />
         </TableRow>
+
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TableRow
             android:layout_width="match_parent"
@@ -68,7 +76,6 @@
                 android:ems="10"
                 android:id="@+id/editText_userDetails_crewnetPassword" />
         </TableRow>
-
     </TableLayout>
 
     <Button

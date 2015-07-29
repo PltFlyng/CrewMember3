@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@android:color/background_light">
+    android:background="@android:color/background_light"
+    android:weightSum="1">
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -20,11 +21,12 @@
             android:text="@string/firstRun_popup_welcomemsg_generic"
             android:id="@+id/textview_firstRunPopup_welcomeHeader"
             android:textAlignment="center"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textSize="40dp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/ic_launcher"
             android:layout_gravity="center_horizontal" />
 
@@ -32,6 +34,7 @@
             android:id="@+id/button_welcomepopup_dismiss"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Dismiss" />
+            android:text="Continue.."
+            android:layout_gravity="bottom" />
     </LinearLayout>
 </LinearLayout>

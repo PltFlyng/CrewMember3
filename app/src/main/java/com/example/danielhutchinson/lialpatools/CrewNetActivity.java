@@ -82,6 +82,9 @@ public class CrewNetActivity extends ActionBarActivity {
     private static final String CrewnetStorage = "crewnet/";
 
    private static final String CrewNetLocalPath = APP_Storage_home + CrewnetStorage;
+    private static final String CrewBriefFileName = "daily_crewbrief.pdf";
+    private static final String CrewNetDir = GlobalManagement.GetGlobalDirPaths("CrewNetDir");
+    private String DESTINATION_FILE = "";
 
 
     Button Login;
@@ -389,14 +392,15 @@ public class CrewNetActivity extends ActionBarActivity {
                             HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
                             HttpEntity reportentity = reportresponse.getEntity();
 
-                            String DESTINATION_PATH ="sdcard/downloaded_test_crewbrief.pdf";
+
 
                             InputStream in = reportentity.getContent();
 
                             long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
-                            File path = new File("sdcard/");
+
+                            File path = new File(CrewNetDir);
                             //path.mkdirs();
-                            File file = new File(path, "test_crewbrief.pdf");
+                            File file = new File(path, CrewBriefFileName);
                             FileOutputStream fos = new FileOutputStream(file);
 
                             byte[] buffer = new byte[1024];
@@ -413,8 +417,8 @@ public class CrewNetActivity extends ActionBarActivity {
                             fos.close();
 
                             httpclient.getConnectionManager().shutdown();
-
-
+                            DESTINATION_FILE = CrewNetDir + CrewBriefFileName;
+                            displaypdf(DESTINATION_FILE);
 
                         }
 
@@ -476,26 +480,27 @@ public class CrewNetActivity extends ActionBarActivity {
 
 
 //---------
-    public void displaypdf() {
+public void displaypdf(String FileName) {
+    File file = new File(FileName);
 
-        File file = null;
-        file = new File(Environment.getExternalStorageDirectory()+dir+ "/sample.pdf");
-        Toast.makeText(getApplicationContext(), file.toString() , Toast.LENGTH_LONG).show();
-        if(file.exists()) {
-            Intent target = new Intent(Intent.ACTION_VIEW);
-            target.setDataAndType(Uri.fromFile(file), "application/pdf");
-            target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    if (file.exists()) {
+        Uri path = Uri.fromFile(file);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(path, "application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            Intent intent = Intent.createChooser(target, "Open File");
-            try {
-                startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                // Instruct the user to install a PDF reader here, or something
-            }
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+
+            Toast.makeText(getApplicationContext(), "No Application Available to View PDF", Toast.LENGTH_LONG).show();
         }
-        else
-            Toast.makeText(getApplicationContext(), "File path is incorrect." , Toast.LENGTH_LONG).show();
+
     }
+}
+
+
+
 
 
     public static String[] MatchStaffNum(String StaffNum, String txt)
