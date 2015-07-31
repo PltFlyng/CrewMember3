@@ -1,6 +1,7 @@
 
 
     <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tabHost_main"                                                                                                                           >
@@ -21,6 +22,22 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
+
+                <LinearLayout
+                    android:id="@+id/tab_rosters_advices"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:textAlignment="center">
+
+                    <fragment
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:name="com.example.danielhutchinson.lialpatools.CrewnetMainFrag"
+                        android:id="@+id/fragment"
+                        tools:layout="@layout/fragment_crewnet_main" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/tab_mainSplash"
@@ -165,11 +182,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/tab_rosters_advices"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:textAlignment="center">
+                    android:id="@+id/tab_documents"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
 
                     <TableLayout
                         android:layout_width="match_parent"
@@ -188,12 +204,6 @@
                         </TableRow>
                     </TableLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab_documents"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical" />
             </FrameLayout>
 
         </LinearLayout>

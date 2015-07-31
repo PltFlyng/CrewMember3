@@ -1,5 +1,6 @@
 package com.example.danielhutchinson.lialpatools;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -147,6 +148,11 @@ String sTextFromET = "";
         tab_rostersAdvice.setIndicator("My Life");
         maintabhost.addTab(tab_rostersAdvice);
 
+
+
+
+
+
         TabHost.TabSpec tab_docs= maintabhost.newTabSpec("Docs");
         tab_docs.setContent(R.id.tab_documents);
         tab_docs.setIndicator("Docs");
@@ -188,6 +194,10 @@ public void FirstRun() {
         GlobalManagement.SetupAppGlobals();
         //Check for SaveDIR if does not exsist make it
         savePreferences("FirstRun","no");
+        savePreferences("CurrentRoster","null");
+        savePreferences("NextRoster","null");
+        savePreferences("LastRoster","null");
+        savePreferences("Crewbrief","null");
 
 
     } else {

@@ -11,10 +11,12 @@ import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import android.app.Dialog;
@@ -55,6 +57,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -84,7 +87,7 @@ public class CrewNetActivity extends ActionBarActivity {
     private static final String APP_Storage_home = "sdcard/";
     private static final String CrewnetStorage = "crewnet/";
 
-   private static final String CrewNetLocalPath = APP_Storage_home + CrewnetStorage;
+    private static final String CrewNetLocalPath = APP_Storage_home + CrewnetStorage;
     private static final String CrewBriefFileName = "daily_crewbrief.pdf";
     public static final String CurrentRosterfFileName = "current_roster.pdf";
     private static final String CrewNetDir = GlobalManagement.GetGlobalDirPaths("CrewNetDir");
@@ -117,25 +120,53 @@ public class CrewNetActivity extends ActionBarActivity {
     public String ReportRequestUrlGenerator (String ReportType)
     {
         String URL = "null";
+        Long myCurrentTimeMillis;
+        Long NextRosterTimeMillis;
+        SimpleDateFormat sdf;
+        SimpleDateFormat sdf_nextroster;
+        Date resultdate;
+        String MyDateString;
+        String My_NextRosterDateString;
+
+
+
         switch (ReportType){
             case "CrewBrief":
                 URL = CrewBrief_Request;
                 break;
             case "CurrentRoster":
-                Long myCurrentTimeMillis = System.currentTimeMillis();
-                SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
-                Date resultdate = new Date(myCurrentTimeMillis);
-                String MyDateString = sdf.format(resultdate).toString();
+                myCurrentTimeMillis = System.currentTimeMillis();
+                sdf = new SimpleDateFormat("M/dd/yyyy");
+                resultdate = new Date(myCurrentTimeMillis);
+                MyDateString = sdf.format(resultdate).toString();
                 URL = CurrentRosterBaseQuery + MyDateString + "&periodend=" + MyDateString;
                 //System.out.println("My URL returned String is " + URL);
-
-
-
-
-
-
-
                 break;
+
+            case "CheckStatus":
+            case "NextRoster":
+
+                Calendar now = Calendar.getInstance();
+                System.out.println("Current date : " + (now.get(Calendar.MONTH) + 1) + "-"
+                        + now.get(Calendar.DATE) + "-" + now.get(Calendar.YEAR));
+
+                // add days to current date using Calendar.add method
+                now.add(Calendar.DATE, 28);
+
+                System.out.println("date after one day : " + (now.get(Calendar.MONTH) + 1) + "-"
+                        + now.get(Calendar.DATE) + "-" + now.get(Calendar.YEAR));
+                MyDateString = (now.get(Calendar.MONTH) + 1) + "/" + now.get(Calendar.DATE) + "/" + now.get(Calendar.YEAR);
+
+                URL = CurrentRosterBaseQuery + MyDateString + "&periodend=" + MyDateString;
+                break;
+
+            default:
+                URL = "null";
+                break;
+
+
+
+
         }//end of the switch case
 
         return URL;
@@ -190,7 +221,7 @@ public class CrewNetActivity extends ActionBarActivity {
 
 
 
-        Advice_test = (Button) findViewById(R.id.button_advice_test);
+        Advice_test = (Button) findViewById(R.id.button_crewnet_test_download);
         Advice_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,6 +266,7 @@ public class CrewNetActivity extends ActionBarActivity {
             // TODO Auto-generated method stub
             int count;
             String Operation = params[0];
+            Boolean LoginPassed = false;
             //code to run in task goes here------------------------------
             try {
                 //persistent variables
@@ -320,226 +352,184 @@ public class CrewNetActivity extends ActionBarActivity {
                     //end of log output for debugging
 
                 } //end of the cookie for loop
-
+                if (cookies.size() >= 2 ){LoginPassed = true;}
+                if (cookies.size() < 2 ){LoginPassed = false;}
                 //log debug demarking end of login portion
                 Log.d("APP Trace", "End Login Test");
+if (LoginPassed = true) {
+    //------cooke placement for other functions begins here------------------------------
+    String CookieString_parts[] = Cookie_strings[0].split(":");
+    String CookieString1 = CookieString_parts[0] + "=" + CookieString_parts[1] + "; path=" + CookieString_parts[2];
+    cookie1 = new BasicClientCookie("Name", "value");
+    cookie1 = new BasicClientCookie(CookieString_parts[0], CookieString_parts[1]);
 
-            //------cooke placement for other functions begins here------------------------------
-                String CookieString_parts[] = Cookie_strings[0].split(":");
-                String CookieString1 = CookieString_parts[0] + "=" + CookieString_parts[1] + "; path=" + CookieString_parts[2];
-                cookie1 = new BasicClientCookie("Name", "value");
-                cookie1 = new BasicClientCookie(CookieString_parts[0], CookieString_parts[1]);
+    String CookieString_parts2[] = Cookie_strings[1].split(":");
+    String CookieString2 = CookieString_parts2[0] + "=" + CookieString_parts2[1] + "; path=" + CookieString_parts2[2];
+    BasicClientCookie cookie2 = new BasicClientCookie("Name", "value");
+    cookie2 = new BasicClientCookie(CookieString_parts2[0], CookieString_parts2[1]);
 
-                String CookieString_parts2[] = Cookie_strings[1].split(":");
-                String CookieString2 = CookieString_parts2[0] + "=" + CookieString_parts2[1] + "; path=" + CookieString_parts2[2];
-                BasicClientCookie cookie2 = new BasicClientCookie("Name", "value");
-                cookie2 = new BasicClientCookie(CookieString_parts2[0], CookieString_parts2[1]);
-
-                DefaultHttpClient httpclient = new DefaultHttpClient();
-                localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+    DefaultHttpClient httpclient = new DefaultHttpClient();
+    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
 
 //cookie.setDomain("your domain");
-                cookie1.setPath("/");
-                cookie2.setPath("/");
+    cookie1.setPath("/");
+    cookie2.setPath("/");
 
-                cookieStore.addCookie(cookie1);
-                cookieStore.addCookie(cookie2);
-                localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-                httpclient.setCookieStore(cookieStore);
-                // end of cookie placement for subsequent requests-----------------------------------------------------------------------------------
+    cookieStore.addCookie(cookie1);
+    cookieStore.addCookie(cookie2);
+    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+    httpclient.setCookieStore(cookieStore);
+    // end of cookie placement for subsequent requests-----------------------------------------------------------------------------------
 
 //----Declare Variables used globally in each of the switches cases
 
+    String ReportType = "null";
+    String Report_initial_request = "null";
+    //----end of case shared variables
+    //options are CrewBrief, CurrentRoster, NextRoster, CheckStatus
+    switch (Operation) {
+        case "CrewBrief":
+            ReportType = "CrewBrief";
+            Report_initial_request = ReportRequestUrlGenerator(ReportType);
+            break;
+        case "CurrentRoster":
+            ReportType = "CurrentRoster";
+            Report_initial_request = ReportRequestUrlGenerator(ReportType);
+            break;
+        case "NextRoster":
+            ReportType = "NextRoster";
+            Report_initial_request = ReportRequestUrlGenerator(ReportType);
+            break;
+        case "CheckStatus":
+            ReportType = "CheckStatus";
+            Report_initial_request = ReportRequestUrlGenerator(ReportType);
+            break;
 
+        default:
+            ReportType = "null";
+            Report_initial_request = "null";
+            break;
+    }
 
+//query the report generator
+    HttpGet httpget = new HttpGet(Report_initial_request);
 
+    httpget.setHeader("Host", "209.59.124.244");
+    httpget.addHeader("Referer", "http://209.59.124.244/crewnet/home.aspx");
+    httpget.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
+    httpget.addHeader("Accept-Language", "en-US,en;q=0.5");
+    httpget.addHeader("Accept-Encoding", "gzip, deflate");
+    httpget.addHeader("User-Agent", USER_AGENT);
 
-
-
-
-
-//----end of case shared variables
-
-                if (Operation.equals("CrewBrief")) {
-                    String ReportType = "CrewBrief";
-                    String Report_initial_request = ReportRequestUrlGenerator(ReportType);
-                    HttpGet httpget = new HttpGet(Report_initial_request);
-
-                    httpget.setHeader("Host", "209.59.124.244");
-                    httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
-                    httpget.addHeader("User-Agent", USER_AGENT);
-
-                    httpget.addHeader("Cookie", CookieString1);
-                    httpget.addHeader("Cookie", CookieString2);
-
-                    HttpResponse homeresponse = httpclient.execute(httpget, localContext);
-                    entity = homeresponse.getEntity();
-                    String responseBody = "";
-                    responseBody = EntityUtils.toString(homeresponse.getEntity());
-
-//for debug testing write response to log
-                    Log.d("Headers", "---------------------------headers--------------------");
-
-                    Header[] homeheaders = response.getAllHeaders();
-                    for (Header header : homeheaders) {
-                        System.out.println("Key : " + header.getName()
-                                + " ,Value : " + header.getValue());
-                    }
-                    Log.d("Headers", "---------------------------headers--------------------");
-                    Log.d("Http get Response:", homeresponse.toString());
-                    //Log.d("Http body :", responseBody);
-//end of debug testing block
-
-                    entity.consumeContent();
-                    //at this point the raw html returned is contained in response body we need to parse it and return a report url for report creator
-                    //responseBody is the var containing the raw html
-                    String ReportURL = CreatorParser(ReportType, responseBody);
-
-                    if (!ReportURL.equals("none")) {
-                        //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
-                        System.out.println("request url is " + ReportURL);
-
-                        HttpGet reporthttpget = new HttpGet(ReportURL);
-
-                        reporthttpget.setHeader("Host", "209.59.124.244");
-                        reporthttpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
-                        reporthttpget.addHeader("User-Agent", USER_AGENT);
-
-                        reporthttpget.addHeader("Cookie", CookieString1);
-                        reporthttpget.addHeader("Cookie", CookieString2);
-
-                        HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
-                        HttpEntity reportentity = reportresponse.getEntity();
-
-
-                        InputStream in = reportentity.getContent();
-                        long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
-
-                        String [] SaveFile_fullpath = ReportSaveFileNameGenerator(ReportType);
-
-                        File path = new File(SaveFile_fullpath[0]);
-                        //path.mkdirs();
-                        File file = new File(path, SaveFile_fullpath[1]);
-                        FileOutputStream fos = new FileOutputStream(file);
-
-                        byte[] buffer = new byte[1024];
-                        int len1 = 0;
-                        long total = 0;
-
-
-                        while ((len1 = in.read(buffer)) != -1) {
-                            fos.write(buffer, 0, len1);
-                            total += len1;
-                            publishProgress("" + (int) ((total * 100) / nTotalBytesInStream));
-                        }
-                        in.close();
-                        fos.close();
-
-
-                        DESTINATION_FILE = SaveFile_fullpath[0] + SaveFile_fullpath[1];
-                        displaypdf(DESTINATION_FILE);
-                        httpclient.getConnectionManager().shutdown();
-                    }
-                } //end of crew brief case
-                if (Operation.equals("CurrentRoster")) {
-                    String ReportType = "CurrentRoster";
-                   String Report_initial_request = ReportRequestUrlGenerator(ReportType);
-
-                    //String stringEncoded = URLEncoder.encode("http://209.59.124.244/crewnet/forms/reportcreator.aspx?reportname=RosterCurrent&periodstart=7/29/2015&periodend=7/29/2015", "UTF-8");
-                    HttpGet httpget = new HttpGet("http://209.59.124.244/crewnet/forms/reportcreator.aspx?reportname=RosterCurrent&periodstart=7/29/2015&periodend=7/29/2015");
-
-                    httpget.setHeader("Host", "209.59.124.244");
-                    httpget.addHeader("Referer", "http://209.59.124.244/crewnet/home.aspx");
-                    httpget.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-
-                    httpget.addHeader("Accept-Language", "en-US,en;q=0.5");
-                    httpget.addHeader("Accept-Encoding", "gzip, deflate");
-                    httpget.addHeader("User-Agent", USER_AGENT);
-
-                    httpget.addHeader("Cookie", CookieString1);
-                    httpget.addHeader("Cookie", CookieString2);
-                    httpget.addHeader("Connection", "keep-alive");
-                    HttpResponse homeresponse = httpclient.execute(httpget, localContext);
-                    entity = homeresponse.getEntity();
-                    String responseBody = "";
-                    responseBody = EntityUtils.toString(homeresponse.getEntity());
+    httpget.addHeader("Cookie", CookieString1);
+    httpget.addHeader("Cookie", CookieString2);
+    httpget.addHeader("Connection", "keep-alive");
+    HttpResponse homeresponse = httpclient.execute(httpget, localContext);
+    entity = homeresponse.getEntity();
+    String responseBody = "";
+    responseBody = EntityUtils.toString(homeresponse.getEntity());
 
 //for debug testing write response to log
-                    Log.d("Headers", "---------------------------headers--------------------");
+    Log.d("Headers", "---------------------------headers--------------------");
 
-                    Header[] homeheaders = response.getAllHeaders();
-                    for (Header header : homeheaders) {
-                        System.out.println("Key : " + header.getName()
-                                + " ,Value : " + header.getValue());
-                    }
-                    Log.d("Headers", "---------------------------headers--------------------");
-                    Log.d("Http get Response:", homeresponse.toString());
-                    Log.d("Http body :", responseBody);
+    Header[] homeheaders = response.getAllHeaders();
+    for (Header header : homeheaders) {
+        System.out.println("Key : " + header.getName()
+                + " ,Value : " + header.getValue());
+    }
+    Log.d("Headers", "---------------------------headers--------------------");
+    Log.d("Http get Response:", homeresponse.toString());
+    Log.d("Http body :", responseBody);
 //end of debug testing block
 
-                    entity.consumeContent();
-                    //at this point the raw html returned is contained in response body we need to parse it and return a report url for report creator
-                    //responseBody is the var containing the raw html
-                    String ReportURL = CreatorParser(ReportType, responseBody);
-
-                    if (!ReportURL.equals("none")) {
-                        //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
-                        System.out.println("request url is " + ReportURL);
-
-                        HttpGet reporthttpget = new HttpGet(ReportURL);
-
-                        httpget.setHeader("Host", "209.59.124.244");
-                        httpget.addHeader("Referer", "http://209.59.124.244/crewnet/home.aspx");
-                        httpget.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-
-                        httpget.addHeader("Accept-Language", "en-US,en;q=0.5");
-                        httpget.addHeader("Accept-Encoding", "gzip, deflate");
-                        httpget.addHeader("User-Agent", USER_AGENT);
-
-                        httpget.addHeader("Cookie", CookieString1);
-                        httpget.addHeader("Cookie", CookieString2);
-                        httpget.addHeader("Connection", "keep-alive");
-
-                        HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
-                        HttpEntity reportentity = reportresponse.getEntity();
+    entity.consumeContent();
+    //at this point the raw html returned is contained in response body we need to parse it and return a report url for report creator
+    //responseBody is the var containing the raw html
+//parse the response to get the final url for the report or the "if available next roster check"
+    String ReportURL = "none";
 
 
-                        InputStream in = reportentity.getContent();
-                        long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
-
-                        String [] SaveFile_fullpath = ReportSaveFileNameGenerator(ReportType);
-
-                        File path = new File(SaveFile_fullpath[0]);
-                        //path.mkdirs();
-                        File file = new File(path, SaveFile_fullpath[1]);
-                        FileOutputStream fos = new FileOutputStream(file);
-
-                        byte[] buffer = new byte[1024];
-                        int len1 = 0;
-                        long total = 0;
+    ReportURL = CreatorParser(ReportType, responseBody);
+    switch (ReportType) {
+        case "CheckStatus":
+            if (ReportURL.equals("Available")) {
+                //ToDo Update NextRoster Button
 
 
-                        while ((len1 = in.read(buffer)) != -1) {
-                            fos.write(buffer, 0, len1);
-                            total += len1;
-                            publishProgress("" + (int) ((total * 100) / nTotalBytesInStream));
-                        }
-                        in.close();
-                        fos.close();
+            } else if (ReportURL.equals("Not Available")) {
+                //ToDo Update NextRoster Button
+            }
+            break;
+        case "CrewBrief":
+        case "CurrentRoster":
+        case "NextRoster":
+            if (!ReportURL.equals("none")) {
+                //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
+                System.out.println("request url is " + ReportURL);
+
+                HttpGet reporthttpget = new HttpGet(ReportURL);
+
+                httpget.setHeader("Host", "209.59.124.244");
+                httpget.addHeader("Referer", "http://209.59.124.244/crewnet/home.aspx");
+                httpget.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
+                httpget.addHeader("Accept-Language", "en-US,en;q=0.5");
+                httpget.addHeader("Accept-Encoding", "gzip, deflate");
+                httpget.addHeader("User-Agent", USER_AGENT);
+
+                httpget.addHeader("Cookie", CookieString1);
+                httpget.addHeader("Cookie", CookieString2);
+                httpget.addHeader("Connection", "keep-alive");
+
+                HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
+                HttpEntity reportentity = reportresponse.getEntity();
 
 
-                        DESTINATION_FILE = SaveFile_fullpath[0] + SaveFile_fullpath[1];
-                        displaypdf(DESTINATION_FILE);
-                        httpclient.getConnectionManager().shutdown();
-                    }
+                InputStream in = reportentity.getContent();
+                long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
+
+                String[] SaveFile_fullpath = ReportSaveFileNameGenerator(ReportType);
+
+                File path = new File(SaveFile_fullpath[0]);
+                //path.mkdirs();
+                File file = new File(path, SaveFile_fullpath[1]);
+                FileOutputStream fos = new FileOutputStream(file);
+
+                byte[] buffer = new byte[1024];
+                int len1 = 0;
+                long total = 0;
+
+
+                while ((len1 = in.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len1);
+                    total += len1;
+                    publishProgress("" + (int) ((total * 100) / nTotalBytesInStream));
                 }
+                in.close();
+                fos.close();
 
 
+                DESTINATION_FILE = SaveFile_fullpath[0] + SaveFile_fullpath[1];
+                displaypdf(DESTINATION_FILE);
+                httpclient.getConnectionManager().shutdown();
+            } //this is for the report getter iff
+            else {
+                //warn the user that no url was provided
 
 
+            }
+            break;
 
+    }
+
+}//end of the login is true statement
+  else {
+            //Let the user know login failed
+    Toast.makeText(getApplicationContext(), "Login Failed!! Check user ID and Password.", Toast.LENGTH_LONG).show();
+
+       }
                 //this is the catch clause for the entire task
      } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -582,22 +572,33 @@ public String CreatorParser(String ReportType, String ResponseBodyInput)
 {
     String[] Body_strings = ResponseBodyInput.split("\n");
     String[] ReportLocator = {"false", "0", "0"};
-
+    String ReportRequest = "none";
+    String NextRosterFlag = "null";
     //split the response body into lines that we can use to parse for the report indicator
-    for (int x = 0; x <= Body_strings.length - 1; x++) {
-        //System.out.println(Body_strings[x]);
 
-        String[] parser_tmp = MatchStaffNum(test_id, Body_strings[x]);
 
-        if (parser_tmp[0].equals("true")) {
-            ReportLocator[0] = parser_tmp[0];
-            ReportLocator[1] = parser_tmp[1];
-            ReportLocator[2] = parser_tmp[2];
+
+        for (int x = 0; x <= Body_strings.length - 1; x++) {
+            //System.out.println(Body_strings[x]);
+            if(ReportType.equals("CheckStatus"))
+            {
+               NextRosterFlag = NextRosterDetector(Body_strings[x]);
+                if (NextRosterFlag.equals("Available")){ ReportLocator[0] = "true";}
+                if (NextRosterFlag.equals("null")){ ReportLocator[0] = "false";}
+            }
+            else {
+                    String[] parser_tmp = MatchStaffNum(test_id, Body_strings[x]);
+
+                    if (parser_tmp[0].equals("true")) {
+                        ReportLocator[0] = parser_tmp[0];
+                        ReportLocator[1] = parser_tmp[1];
+                        ReportLocator[2] = parser_tmp[2];
+                    }
+                 }
         }
 
-    }
-    //report pointer url is created
-    String ReportRequest = "none";
+             //report pointer url is created
+
     if (ReportLocator[0].equals("true")) {
         switch (ReportType){
             case "CrewBrief":
@@ -605,7 +606,9 @@ public String CreatorParser(String ReportType, String ResponseBodyInput)
                 break;
             case "CurrentRoster":
                 ReportRequest = "http://209.59.124.244/crewnet/Reports/RosterReport_" + ReportLocator[1] + "_" + ReportLocator[2] + ".pdf";
-
+                break;
+            case "CheckCurrentRoster":
+                ReportRequest = "Not Available";
                 break;
         }//end of the switch case
 
@@ -690,6 +693,43 @@ public void displaypdf(String FileName) {
         }
         return ReturnArray;
     }
+
+    public static String NextRosterDetector(String txt)
+    {
+        String MatchFound = "false";
+        String ReturnFlag = "null";
+
+        //String txt="<span id=\"lblReport\" class=\"formmsgbox\">There is currently no live Roster available for you to  view.</span><!--<select name=\"cboExportOptions\" id=\"cboExportOptions\">";
+
+        String re1=".*?";	// Non-greedy match on filler
+        String re2="(no)";	// Word 1
+        String re3=".*?";	// Non-greedy match on filler
+        String re4="(live)";	// Word 2
+        String re5=".*?";	// Non-greedy match on filler
+        String re6="(Roster)";	// Word 3
+
+        Pattern p = Pattern.compile(re1+re2+re3+re4+re5+re6,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher m = p.matcher(txt);
+        String wordAggregate = "null";
+        if (m.find())
+        {
+            String word1=m.group(1);
+            String word2=m.group(2);
+            String word3=m.group(3);
+            wordAggregate = word1 + " " + word2 + " " + word3;
+            System.out.print("("+word1.toString()+")"+"("+word2.toString()+")"+"("+word3.toString()+")"+"\n");
+            if (wordAggregate.equals("no live Roster"))
+            {
+                ReturnFlag = "Available";
+            }
+            else {
+                ReturnFlag = "null";
+                 }
+        }
+
+        return ReturnFlag;
+    }
+
 
 
 }//end of the main class

@@ -49,10 +49,13 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +86,7 @@ public class CrewNetActivity extends ActionBarActivity {
 
    private static final String CrewNetLocalPath = APP_Storage_home + CrewnetStorage;
     private static final String CrewBriefFileName = "daily_crewbrief.pdf";
+    public static final String CurrentRosterfFileName = "current_roster.pdf";
     private static final String CrewNetDir = GlobalManagement.GetGlobalDirPaths("CrewNetDir");
     private String DESTINATION_FILE = "";
 
@@ -106,6 +110,37 @@ public class CrewNetActivity extends ActionBarActivity {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
     public static final String CrewBrief_Request = CrewnetBase + "/forms/ReportCreator.aspx?ReportName=CrewBriefingReport?FlightPlanKeys=";
     public static final String ReportViewer_base = CrewnetBase + "/ReportViewer.aspx?report=";
+
+    public static final String CurrentRosterBaseQuery = CrewnetBase + "/forms/reportcreator.aspx?reportname=RosterCurrent&periodstart=";
+
+
+    public String ReportRequestUrlGenerator (String ReportType)
+    {
+        String URL = "null";
+        switch (ReportType){
+            case "CrewBrief":
+                URL = CrewBrief_Request;
+                break;
+            case "CurrentRoster":
+                Long myCurrentTimeMillis = System.currentTimeMillis();
+                SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
+                Date resultdate = new Date(myCurrentTimeMillis);
+                String MyDateString = sdf.format(resultdate).toString();
+                URL = CurrentRosterBaseQuery + MyDateString + "&periodend=" + MyDateString;
+                //System.out.println("My URL returned String is " + URL);
+
+
+
+
+
+
+
+                break;
+        }//end of the switch case
+
+        return URL;
+    }
+
 
     //------------progress updater
     @Override
@@ -153,13 +188,15 @@ public class CrewNetActivity extends ActionBarActivity {
 
         });
 
+
+
         Advice_test = (Button) findViewById(R.id.button_advice_test);
         Advice_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                CrewAdvice.CrewAdviceControl();
-
+                //CrewAdvice.CrewAdviceControl();
+                new CrewNetController().execute("CurrentRoster");
             }
         });
 
@@ -311,234 +348,198 @@ public class CrewNetActivity extends ActionBarActivity {
                 localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
                 httpclient.setCookieStore(cookieStore);
                 // end of cookie placement for subsequent requests-----------------------------------------------------------------------------------
-                //HttpGet httpget = new HttpGet();
-                
-                
-                switch (Operation) {
-                    case "CrewBrief":
+
+//----Declare Variables used globally in each of the switches cases
 
 
-                        HttpGet httpget = new HttpGet(CrewBrief_Request);
+
+
+
+
+
+
+
+
+//----end of case shared variables
+
+                if (Operation.equals("CrewBrief")) {
+                    String ReportType = "CrewBrief";
+                    String Report_initial_request = ReportRequestUrlGenerator(ReportType);
+                    HttpGet httpget = new HttpGet(Report_initial_request);
+
+                    httpget.setHeader("Host", "209.59.124.244");
+                    httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
+                    httpget.addHeader("User-Agent", USER_AGENT);
+
+                    httpget.addHeader("Cookie", CookieString1);
+                    httpget.addHeader("Cookie", CookieString2);
+
+                    HttpResponse homeresponse = httpclient.execute(httpget, localContext);
+                    entity = homeresponse.getEntity();
+                    String responseBody = "";
+                    responseBody = EntityUtils.toString(homeresponse.getEntity());
+
+//for debug testing write response to log
+                    Log.d("Headers", "---------------------------headers--------------------");
+
+                    Header[] homeheaders = response.getAllHeaders();
+                    for (Header header : homeheaders) {
+                        System.out.println("Key : " + header.getName()
+                                + " ,Value : " + header.getValue());
+                    }
+                    Log.d("Headers", "---------------------------headers--------------------");
+                    Log.d("Http get Response:", homeresponse.toString());
+                    //Log.d("Http body :", responseBody);
+//end of debug testing block
+
+                    entity.consumeContent();
+                    //at this point the raw html returned is contained in response body we need to parse it and return a report url for report creator
+                    //responseBody is the var containing the raw html
+                    String ReportURL = CreatorParser(ReportType, responseBody);
+
+                    if (!ReportURL.equals("none")) {
+                        //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
+                        System.out.println("request url is " + ReportURL);
+
+                        HttpGet reporthttpget = new HttpGet(ReportURL);
+
+                        reporthttpget.setHeader("Host", "209.59.124.244");
+                        reporthttpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
+                        reporthttpget.addHeader("User-Agent", USER_AGENT);
+
+                        reporthttpget.addHeader("Cookie", CookieString1);
+                        reporthttpget.addHeader("Cookie", CookieString2);
+
+                        HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
+                        HttpEntity reportentity = reportresponse.getEntity();
+
+
+                        InputStream in = reportentity.getContent();
+                        long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
+
+                        String [] SaveFile_fullpath = ReportSaveFileNameGenerator(ReportType);
+
+                        File path = new File(SaveFile_fullpath[0]);
+                        //path.mkdirs();
+                        File file = new File(path, SaveFile_fullpath[1]);
+                        FileOutputStream fos = new FileOutputStream(file);
+
+                        byte[] buffer = new byte[1024];
+                        int len1 = 0;
+                        long total = 0;
+
+
+                        while ((len1 = in.read(buffer)) != -1) {
+                            fos.write(buffer, 0, len1);
+                            total += len1;
+                            publishProgress("" + (int) ((total * 100) / nTotalBytesInStream));
+                        }
+                        in.close();
+                        fos.close();
+
+
+                        DESTINATION_FILE = SaveFile_fullpath[0] + SaveFile_fullpath[1];
+                        displaypdf(DESTINATION_FILE);
+                        httpclient.getConnectionManager().shutdown();
+                    }
+                } //end of crew brief case
+                if (Operation.equals("CurrentRoster")) {
+                    String ReportType = "CurrentRoster";
+                   String Report_initial_request = ReportRequestUrlGenerator(ReportType);
+
+                    //String stringEncoded = URLEncoder.encode("http://209.59.124.244/crewnet/forms/reportcreator.aspx?reportname=RosterCurrent&periodstart=7/29/2015&periodend=7/29/2015", "UTF-8");
+                    HttpGet httpget = new HttpGet("http://209.59.124.244/crewnet/forms/reportcreator.aspx?reportname=RosterCurrent&periodstart=7/29/2015&periodend=7/29/2015");
+
+                    httpget.setHeader("Host", "209.59.124.244");
+                    httpget.addHeader("Referer", "http://209.59.124.244/crewnet/home.aspx");
+                    httpget.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
+                    httpget.addHeader("Accept-Language", "en-US,en;q=0.5");
+                    httpget.addHeader("Accept-Encoding", "gzip, deflate");
+                    httpget.addHeader("User-Agent", USER_AGENT);
+
+                    httpget.addHeader("Cookie", CookieString1);
+                    httpget.addHeader("Cookie", CookieString2);
+                    httpget.addHeader("Connection", "keep-alive");
+                    HttpResponse homeresponse = httpclient.execute(httpget, localContext);
+                    entity = homeresponse.getEntity();
+                    String responseBody = "";
+                    responseBody = EntityUtils.toString(homeresponse.getEntity());
+
+//for debug testing write response to log
+                    Log.d("Headers", "---------------------------headers--------------------");
+
+                    Header[] homeheaders = response.getAllHeaders();
+                    for (Header header : homeheaders) {
+                        System.out.println("Key : " + header.getName()
+                                + " ,Value : " + header.getValue());
+                    }
+                    Log.d("Headers", "---------------------------headers--------------------");
+                    Log.d("Http get Response:", homeresponse.toString());
+                    Log.d("Http body :", responseBody);
+//end of debug testing block
+
+                    entity.consumeContent();
+                    //at this point the raw html returned is contained in response body we need to parse it and return a report url for report creator
+                    //responseBody is the var containing the raw html
+                    String ReportURL = CreatorParser(ReportType, responseBody);
+
+                    if (!ReportURL.equals("none")) {
+                        //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
+                        System.out.println("request url is " + ReportURL);
+
+                        HttpGet reporthttpget = new HttpGet(ReportURL);
 
                         httpget.setHeader("Host", "209.59.124.244");
-                        httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
+                        httpget.addHeader("Referer", "http://209.59.124.244/crewnet/home.aspx");
+                        httpget.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
+                        httpget.addHeader("Accept-Language", "en-US,en;q=0.5");
+                        httpget.addHeader("Accept-Encoding", "gzip, deflate");
                         httpget.addHeader("User-Agent", USER_AGENT);
 
                         httpget.addHeader("Cookie", CookieString1);
                         httpget.addHeader("Cookie", CookieString2);
+                        httpget.addHeader("Connection", "keep-alive");
 
-                        HttpResponse homeresponse = httpclient.execute(httpget, localContext);
-                        entity = homeresponse.getEntity();
-                        String responseBody = "";
-                        responseBody = EntityUtils.toString(homeresponse.getEntity());
+                        HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
+                        HttpEntity reportentity = reportresponse.getEntity();
 
-//for debug testing write response to log
-                        Log.d("Headers", "---------------------------headers--------------------");
 
-                        Header[] homeheaders = response.getAllHeaders();
-                        for (Header header : homeheaders) {
-                            System.out.println("Key : " + header.getName()
-                                    + " ,Value : " + header.getValue());
+                        InputStream in = reportentity.getContent();
+                        long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
+
+                        String [] SaveFile_fullpath = ReportSaveFileNameGenerator(ReportType);
+
+                        File path = new File(SaveFile_fullpath[0]);
+                        //path.mkdirs();
+                        File file = new File(path, SaveFile_fullpath[1]);
+                        FileOutputStream fos = new FileOutputStream(file);
+
+                        byte[] buffer = new byte[1024];
+                        int len1 = 0;
+                        long total = 0;
+
+
+                        while ((len1 = in.read(buffer)) != -1) {
+                            fos.write(buffer, 0, len1);
+                            total += len1;
+                            publishProgress("" + (int) ((total * 100) / nTotalBytesInStream));
                         }
-                        Log.d("Headers", "---------------------------headers--------------------");
-                        Log.d("Http get Response:", homeresponse.toString());
-                        //Log.d("Http body :", responseBody);
-//end of debug testing block
-
-                        entity.consumeContent();
-
-                        String[] Body_strings = responseBody.split("\n");
-                        String[] CrewBriefLocator = {"false", "0", "0"};
-
-                        //split the response body into lines that we can use to parse for the report indicator
-                        for (int x = 0; x <= Body_strings.length - 1; x++) {
-                            //System.out.println(Body_strings[x]);
-
-                            String[] parser_tmp = MatchStaffNum(test_id, Body_strings[x]);
-
-                            if (parser_tmp[0].equals("true")) {
-                                CrewBriefLocator[0] = parser_tmp[0];
-                                CrewBriefLocator[1] = parser_tmp[1];
-                                CrewBriefLocator[2] = parser_tmp[2];
-                            }
-
-                        }
-                        //report pointer url is created
-                        String CrewbriefReportRequest = "none";
-                        if (CrewBriefLocator[0].equals("true")) {
-                            CrewbriefReportRequest = "http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_" + CrewBriefLocator[1] + "_" + CrewBriefLocator[2] + ".pdf";
-                        } else {CrewbriefReportRequest = "none";}
-
-                        if (!CrewbriefReportRequest.equals("none"))
-                        {
-                            //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
-                            System.out.println("request url is " + CrewbriefReportRequest);
-
-                            HttpGet reporthttpget = new HttpGet(CrewbriefReportRequest);
-                            //Post Data
-                            List<NameValuePair> CBnameValuePair = new ArrayList<NameValuePair>(4);
-                            CBnameValuePair.add(new BasicNameValuePair("__VIEWSTATE", "dDwtNjE4MTAxMzgwOzs+mx+tMJxpkDyVNRQqrIe3HPBGFug="));
-                            CBnameValuePair.add(new BasicNameValuePair("cmdExport", "Export"));
+                        in.close();
+                        fos.close();
 
 
-                            //Encode POST data
-                            //reporthttpget.setEntity(new UrlEncodedFormEntity(CBnameValuePair)); //this is for post only
-
-                            reporthttpget.setHeader("Host", "209.59.124.244");
-                            reporthttpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
-                            reporthttpget.addHeader("User-Agent", USER_AGENT);
-
-                            reporthttpget.addHeader("Cookie", CookieString1);
-                            reporthttpget.addHeader("Cookie", CookieString2);
-
-                            HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
-                            HttpEntity reportentity = reportresponse.getEntity();
+                        DESTINATION_FILE = SaveFile_fullpath[0] + SaveFile_fullpath[1];
+                        displaypdf(DESTINATION_FILE);
+                        httpclient.getConnectionManager().shutdown();
+                    }
+                }
 
 
 
-                            InputStream in = reportentity.getContent();
-
-                            long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
-
-                            File path = new File(CrewNetDir);
-                            //path.mkdirs();
-                            File file = new File(path, CrewBriefFileName);
-                            FileOutputStream fos = new FileOutputStream(file);
-
-                            byte[] buffer = new byte[1024];
-                            int len1 = 0;
-                            long total = 0;
 
 
-                            while ((len1 = in.read(buffer)) != -1) {
-                                fos.write(buffer, 0, len1);
-                                total += len1;
-                                publishProgress("" + (int) ((total * 100) / nTotalBytesInStream));
-                        }
-                            in.close();
-                            fos.close();
-
-                            
-                            DESTINATION_FILE = CrewNetDir + CrewBriefFileName;
-                            displaypdf(DESTINATION_FILE);
-
-                        }
-                        break; //end of crew brief case
-
-                    case "CurrentRoster":
-
-
-                        HttpGet httpget = new HttpGet(CrewBrief_Request);
-
-                        httpget.setHeader("Host", "209.59.124.244");
-                        httpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
-                        httpget.addHeader("User-Agent", USER_AGENT);
-
-                        httpget.addHeader("Cookie", CookieString1);
-                        httpget.addHeader("Cookie", CookieString2);
-
-                        HttpResponse homeresponse = httpclient.execute(httpget, localContext);
-                        entity = homeresponse.getEntity();
-                        String responseBody = "";
-                        responseBody = EntityUtils.toString(homeresponse.getEntity());
-
-//for debug testing write response to log
-                        Log.d("Headers", "---------------------------headers--------------------");
-
-                        Header[] homeheaders = response.getAllHeaders();
-                        for (Header header : homeheaders) {
-                            System.out.println("Key : " + header.getName()
-                                    + " ,Value : " + header.getValue());
-                        }
-                        Log.d("Headers", "---------------------------headers--------------------");
-                        Log.d("Http get Response:", homeresponse.toString());
-                        //Log.d("Http body :", responseBody);
-//end of debug testing block
-
-                        entity.consumeContent();
-
-                        String[] Body_strings = responseBody.split("\n");
-                        String[] CrewBriefLocator = {"false", "0", "0"};
-
-                        //split the response body into lines that we can use to parse for the report indicator
-                        for (int x = 0; x <= Body_strings.length - 1; x++) {
-                            //System.out.println(Body_strings[x]);
-
-                            String[] parser_tmp = MatchStaffNum(test_id, Body_strings[x]);
-
-                            if (parser_tmp[0].equals("true")) {
-                                CrewBriefLocator[0] = parser_tmp[0];
-                                CrewBriefLocator[1] = parser_tmp[1];
-                                CrewBriefLocator[2] = parser_tmp[2];
-                            }
-
-                        }
-                        //report pointer url is created
-                        String CrewbriefReportRequest = "none";
-                        if (CrewBriefLocator[0].equals("true")) {
-                            CrewbriefReportRequest = "http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_" + CrewBriefLocator[1] + "_" + CrewBriefLocator[2] + ".pdf";
-                        } else {CrewbriefReportRequest = "none";}
-
-                        if (!CrewbriefReportRequest.equals("none"))
-                        {
-                            //http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_216541890_6575.pdf
-                            System.out.println("request url is " + CrewbriefReportRequest);
-
-                            HttpGet reporthttpget = new HttpGet(CrewbriefReportRequest);
-                            //Post Data
-                            List<NameValuePair> CBnameValuePair = new ArrayList<NameValuePair>(4);
-                            CBnameValuePair.add(new BasicNameValuePair("__VIEWSTATE", "dDwtNjE4MTAxMzgwOzs+mx+tMJxpkDyVNRQqrIe3HPBGFug="));
-                            CBnameValuePair.add(new BasicNameValuePair("cmdExport", "Export"));
-
-
-                            //Encode POST data
-                            //reporthttpget.setEntity(new UrlEncodedFormEntity(CBnameValuePair)); //this is for post only
-
-                            reporthttpget.setHeader("Host", "209.59.124.244");
-                            reporthttpget.addHeader("Referer", "http://209.59.124.244/Crewnet/default.aspx");
-                            reporthttpget.addHeader("User-Agent", USER_AGENT);
-
-                            reporthttpget.addHeader("Cookie", CookieString1);
-                            reporthttpget.addHeader("Cookie", CookieString2);
-
-                            HttpResponse reportresponse = httpclient.execute(reporthttpget, localContext);
-                            HttpEntity reportentity = reportresponse.getEntity();
-
-
-
-                            InputStream in = reportentity.getContent();
-
-                            long nTotalBytesInStream = (long) reportentity.getContentLength(); // Total data size
-
-                            File path = new File(CrewNetDir);
-                            //path.mkdirs();
-                            File file = new File(path, CrewBriefFileName);
-                            FileOutputStream fos = new FileOutputStream(file);
-
-                            byte[] buffer = new byte[1024];
-                            int len1 = 0;
-                            long total = 0;
-
-
-                            while ((len1 = in.read(buffer)) != -1) {
-                                fos.write(buffer, 0, len1);
-                                total += len1;
-                                publishProgress("" + (int) ((total * 100) / nTotalBytesInStream));
-                            }
-                            in.close();
-                            fos.close();
-
-
-                            DESTINATION_FILE = CrewNetDir + CrewBriefFileName;
-                            displaypdf(DESTINATION_FILE);
-
-                        }
-                        break; //end of crew brief case
-
-                } //end of the operation case switcher
-
-
-                httpclient.getConnectionManager().shutdown();
                 //this is the catch clause for the entire task
      } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -548,11 +549,6 @@ public class CrewNetActivity extends ActionBarActivity {
                 e.printStackTrace();
      }
             //end of catch clause for the task
-
-
-
-
-
 
             //code to run in task ends here------------------------------
 
@@ -582,9 +578,60 @@ public class CrewNetActivity extends ActionBarActivity {
 
     }
 
+public String CreatorParser(String ReportType, String ResponseBodyInput)
+{
+    String[] Body_strings = ResponseBodyInput.split("\n");
+    String[] ReportLocator = {"false", "0", "0"};
+
+    //split the response body into lines that we can use to parse for the report indicator
+    for (int x = 0; x <= Body_strings.length - 1; x++) {
+        //System.out.println(Body_strings[x]);
+
+        String[] parser_tmp = MatchStaffNum(test_id, Body_strings[x]);
+
+        if (parser_tmp[0].equals("true")) {
+            ReportLocator[0] = parser_tmp[0];
+            ReportLocator[1] = parser_tmp[1];
+            ReportLocator[2] = parser_tmp[2];
+        }
+
+    }
+    //report pointer url is created
+    String ReportRequest = "none";
+    if (ReportLocator[0].equals("true")) {
+        switch (ReportType){
+            case "CrewBrief":
+                ReportRequest = "http://209.59.124.244/Crewnet/Reports/CrewBriefingReport_" + ReportLocator[1] + "_" + ReportLocator[2] + ".pdf";
+                break;
+            case "CurrentRoster":
+                ReportRequest = "http://209.59.124.244/crewnet/Reports/RosterReport_" + ReportLocator[1] + "_" + ReportLocator[2] + ".pdf";
+
+                break;
+        }//end of the switch case
 
 
+    } else {ReportRequest = "none";}
 
+    return ReportRequest ;
+
+}//end of method
+
+public String[] ReportSaveFileNameGenerator(String ReportType)
+{
+    String [] SaveFilePath = {"null","null"};
+    switch (ReportType){
+        case "CrewBrief":
+            SaveFilePath[0] = CrewNetDir;
+            SaveFilePath[1] = CrewBriefFileName;
+            break;
+        case "CurrentRoster":
+            SaveFilePath[0] = CrewNetDir;
+            SaveFilePath[1] = CurrentRosterfFileName;
+
+            break;
+    }//end of the switch case
+    return SaveFilePath;
+}
 
 
 
@@ -602,7 +649,7 @@ public void displaypdf(String FileName) {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
 
-            Toast.makeText(getApplicationContext(), "No Application Available to View PDF", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "No Application Available to View PDF", Toast.LENGTH_LONG).show();
         }
 
     }

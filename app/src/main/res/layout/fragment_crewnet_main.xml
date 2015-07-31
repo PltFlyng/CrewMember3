@@ -1,0 +1,120 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+android:orientation="vertical"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+android:paddingBottom="@dimen/activity_vertical_margin"
+tools:context="com.example.danielhutchinson.lialpatools.CrewnetMainFrag"
+android:id="@+id/layout_crewnet_main">
+
+<TextView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="@string/textview_ui_crewnet_mainheader"
+    android:id="@+id/textView_crewnet_label_mainheader"
+    android:textAlignment="center"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center|center_horizontal" />
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:text="@string/ui_label_crewnet_topnotice_default"
+    android:id="@+id/textView_crewnet_ui_topNotice"
+    android:textAlignment="center"
+    android:layout_marginTop="10dp" />
+
+<TableLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_crewnet_tablelayout">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:orientation="vertical"
+        android:id="@+id/tablerow">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_DownloadRoster"
+            android:id="@+id/button_crewnet_test_download"
+            android:singleLine="false"
+            android:lines="2" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttontext_ViewStoredRoster"
+            android:id="@+id/button"
+            android:lines="2" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttontext_GetCrewBrief"
+            android:id="@+id/button_crewnet_testLogin" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_ViewStoredCrewBrief"
+            android:id="@+id/button_crewnet_test_crewbrief" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonLabel_DownloadNextRoster"
+            android:id="@+id/button2" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonlabel_StoredNextRoster"
+            android:id="@+id/button3"
+            android:lines="2" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_DownloadLastRoster"
+            android:id="@+id/button4" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_storedLastRoster"
+            android:id="@+id/button5" />
+    </TableRow>
+</TableLayout>
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="Large Text"
+    android:id="@+id/textView_crewnet_ui_BottomNoticeArea"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="15dp" />
+
+</LinearLayout>

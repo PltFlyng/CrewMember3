@@ -92,5 +92,15 @@
     <string name="buttontext_save_userdetails"><![CDATA[Save & Return]]></string>
     <string name="title_activity_crew_net">CrewNetActivity</string>
     <string name="firstRun_popup_welcomemsg_generic">Welcome to CM3</string>
+    <string name="button_DownloadRoster">Download\n  Roster</string>
+    <string name="buttontext_GetCrewBrief">Download\n Crew Brief</string>
+    <string name="button_text_ViewStoredCrewBrief">Stored CrewBrief\n --/--/---- --:--</string>
+    <string name="buttontext_ViewStoredRoster">Stored Roster\n  --/--/---- --:--</string>
+    <string name="buttonLabel_DownloadNextRoster">Download\n Next Roster</string>
+    <string name="buttonlabel_StoredNextRoster">Stored Next Roster\n  --/--/---- --:--</string>
+    <string name="button_label_DownloadLastRoster">Download\n Last Roster</string>
+    <string name="button_label_storedLastRoster">Stored Last Roster\n  --/--/---- --:--</string>
+    <string name="textview_ui_crewnet_mainheader">CrewNet</string>
+    <string name="ui_label_crewnet_topnotice_default">Use the buttons below to access the desired reports</string>
 
 </resources>
