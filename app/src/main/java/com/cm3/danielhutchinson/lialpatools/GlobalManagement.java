@@ -1,6 +1,8 @@
-package com.example.danielhutchinson.lialpatools;
+package com.cm3.danielhutchinson.lialpatools;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Daniel on 7/28/2015.
@@ -26,6 +28,9 @@ public class GlobalManagement {
         createDirectoryIfNeeded(OthertLocalPath);
 
     }
+
+
+
 
     public static String GetGlobalDirPaths(String Varname)
     {
@@ -60,9 +65,9 @@ public class GlobalManagement {
         }
     }
 
-    private static Boolean CheckDirExsists(String directoryName)
+    public static Boolean CheckDirExsists(String directoryName)
     {
-        Boolean DirExsists = false;
+        Boolean DirExsists = true;
         File theDir = new File(directoryName);
 
         // if the directory does not exist, create it
@@ -73,5 +78,33 @@ public class GlobalManagement {
         }
         return DirExsists;
     }
+
+    public static Boolean CheckFileExsists(String FileName)
+    {
+        Boolean Exsists = true;
+        File thefile = new File(FileName);
+
+        // if the directory does not exist, create it
+        if (!thefile.exists())
+        {
+            //System.out.println("creating file: " + FileName);
+            Exsists = false;
+        }
+        return Exsists;
+    }
+
+
+    public static String ConvertTimeStampToTime(Long Timestamp)
+    {
+        String return_string = "0";
+        String[]Date_time;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy HH:mm");
+        Date resultdate = new Date(Timestamp);
+        return_string = resultdate.toString();
+
+        return return_string;
+    }
+
+
 
 } //end of the file management class

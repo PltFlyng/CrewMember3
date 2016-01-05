@@ -1,32 +1,17 @@
-package com.example.danielhutchinson.lialpatools;
+package com.cm3.danielhutchinson.lialpatools;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Set;
 
 
 public class FlightDutyTimeMainActivity extends ActionBarActivity {
@@ -79,6 +64,15 @@ public class FlightDutyTimeMainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfState ment
         if (id == R.id.action_settings) {
+            Intent newintent = new Intent(FlightDutyTimeMainActivity.this, UserDetailsActivity.class);
+            startActivity(newintent);
+
+            return true;
+        }
+
+        if (id == R.id.action_about) {
+            Intent newintent = new Intent(FlightDutyTimeMainActivity.this, AboutActivity.class);
+            startActivity(newintent);
             return true;
         }
 

@@ -5,7 +5,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.danielhutchinson.lialpatools.CrewNetActivity"
+    tools:context="com.cm3.danielhutchinson.lialpatools.CrewNetActivity"
     android:id="@+id/layout_crewnet_main">
 
     <TextView
@@ -42,18 +42,18 @@
             android:id="@+id/tablerow">
 
             <Button
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_DownloadRoster"
-                android:id="@+id/button_crewnet_test_download"
+                android:id="@+id/button_crewnet_download_roster"
                 android:singleLine="false"
                 android:lines="2" />
 
             <Button
-                android:layout_width="170dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/buttontext_ViewStoredRoster"
-                android:id="@+id/button"
+                android:id="@+id/button_crewnet_view_storedroster"
                 android:lines="2" />
         </TableRow>
 
@@ -63,16 +63,16 @@
             android:layout_marginLeft="15dp">
 
             <Button
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/buttontext_GetCrewBrief"
-                android:id="@+id/button_crewnet_testLogin" />
+                android:id="@+id/button_crewnet_download_crewbriefing" />
 
             <Button
-                android:layout_width="160dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_text_ViewStoredCrewBrief"
-                android:id="@+id/button_crewnet_test_crewbrief" />
+                android:id="@+id/button_crewnet_view_storedcrewbrief" />
         </TableRow>
 
         <TableRow
@@ -81,16 +81,16 @@
             android:layout_marginLeft="15dp">
 
             <Button
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/buttonLabel_DownloadNextRoster"
-                android:id="@+id/button2" />
+                android:id="@+id/button_crewnet_download_nextroster" />
 
             <Button
-                android:layout_width="170dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/buttonlabel_StoredNextRoster"
-                android:id="@+id/button3"
+                android:id="@+id/button_crewnet_view_storedNextRoster"
                 android:lines="2" />
         </TableRow>
 
@@ -100,24 +100,23 @@
             android:layout_marginLeft="15dp">
 
             <Button
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_label_DownloadLastRoster"
-                android:id="@+id/button4" />
+                android:id="@+id/button_crewnet_download_lastroster" />
 
             <Button
-                android:layout_width="170dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_label_storedLastRoster"
-                android:id="@+id/button5" />
+                android:id="@+id/button_crewnet_view_storedLastRoster" />
         </TableRow>
     </TableLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
         android:id="@+id/textView_crewnet_ui_BottomNoticeArea"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp" />

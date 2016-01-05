@@ -1,6 +1,5 @@
-package com.example.danielhutchinson.lialpatools;
+package com.cm3.danielhutchinson.lialpatools;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -22,6 +21,7 @@ public class UserDetailsActivity extends ActionBarActivity {
     TextView UsersName;
     TextView User_crewNetId;
     TextView User_crewNetPass;
+    TextView User_email;
 
 
 
@@ -34,6 +34,7 @@ public class UserDetailsActivity extends ActionBarActivity {
         UsersName = (TextView) findViewById(R.id.editText_user_details_usersName);
         User_crewNetId = (TextView) findViewById(R.id.editText_userdetails_crewnetID);
         User_crewNetPass = (TextView) findViewById(R.id.editText_userDetails_crewnetPassword);
+        User_email = (TextView) findViewById(R.id.editText_userdetails_email);
                 
         loadSavedPreferences();
 
@@ -85,17 +86,35 @@ public class UserDetailsActivity extends ActionBarActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String UsersCrewNetPassString = User_crewNetId.getText().toString();
+                String UsersCrewNetPassString = User_crewNetPass.getText().toString();
                 savePreferences("UsersCrewNetPass", UsersCrewNetPassString);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                String UsersCrewNetPassString = User_crewNetId.getText().toString();
+                String UsersCrewNetPassString = User_crewNetPass.getText().toString();
                 savePreferences("UsersCrewNetPass", UsersCrewNetPassString);
             }
         });
 
+        User_email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String UsersCrewNetPassString = User_email.getText().toString();
+                savePreferences("UsersEmail", UsersCrewNetPassString);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String UsersCrewNetPassString = User_email.getText().toString();
+                savePreferences("UsersEmail", UsersCrewNetPassString);
+            }
+        });
 
     }
 
@@ -121,6 +140,15 @@ public class UserDetailsActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent newintent = new Intent(UserDetailsActivity.this, UserDetailsActivity.class);
+            startActivity(newintent);
+
+            return true;
+        }
+
+        if (id == R.id.action_about) {
+            Intent newintent = new Intent(UserDetailsActivity.this, AboutActivity.class);
+            startActivity(newintent);
             return true;
         }
 
@@ -132,10 +160,12 @@ public class UserDetailsActivity extends ActionBarActivity {
         String name = sharedPreferences.getString("UsersName", null);
         String CrewNetId = sharedPreferences.getString("UsersCrewNetId", null);
         String CrewNetPass = sharedPreferences.getString("UsersCrewNetPass", null);
+        String UsersEmail = sharedPreferences.getString("UsersEmail", null);
 
         UsersName.setText(name);
         User_crewNetId.setText(CrewNetId);
         User_crewNetPass.setText(CrewNetPass);
+        User_email.setText(UsersEmail);
 
     }
 

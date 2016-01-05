@@ -3,15 +3,15 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.example.danielhutchinson.lialpatools.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.cm3.danielhutchinson.lialpatools.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="com.example.danielhutchinson.lialpatools.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.cm3.danielhutchinson.lialpatools.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 
     <header
-        android:fragment="com.example.danielhutchinson.lialpatools.SettingsActivity$DataSyncPreferenceFragment"
+        android:fragment="com.cm3.danielhutchinson.lialpatools.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

@@ -1,4 +1,4 @@
-package com.example.danielhutchinson.lialpatools;
+package com.cm3.danielhutchinson.lialpatools;
 
 import android.app.Dialog;
 import android.app.Fragment;
@@ -15,35 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.PublicKey;
 import java.util.Calendar;
-import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
+
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.DecimalFormat;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -454,11 +430,11 @@ public void settestdisplay(String[] Input)
 
     //my code ends here
 
-    //code example
+    //code cm3
     //below shows how to call from the main lib in other class. DutyTimeMainLib is declared above
     //utyTimeLib.DutyTestMethod();
     //int test = DutyTimeMainLib.DutyTest2(2);
-    //end of code example
+    //end of code cm3
 
 
 } //end of main class

@@ -1,22 +1,30 @@
-package com.example.danielhutchinson.lialpatools;
+package com.cm3.danielhutchinson.lialpatools;
 
-import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.PopupWindow;
 import android.widget.TabHost;
 import android.webkit.WebView;
@@ -24,7 +32,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ViewGroup.LayoutParams;
 
-public class MainActivity extends ActionBarActivity  {
+
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
+import java.io.File;
+
+
+
+public class MainActivity extends ActionBarActivity {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "erfhL1WCUnnBL4Ny61GeH2jl9";
+    private static final String TWITTER_SECRET = "278CoOmKyrI4WNMAB3xZ6j3yTR8qhzUgsqnQG6XgpkHuHunnYp";
+
+public String CurrentAppVersion_long = "";
 
 Button b1;
 EditText Num1;
@@ -32,17 +54,20 @@ EditText Box3;
 String sTextFromET = "";
 
 
+
     protected TabHost maintabhost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
+         setContentView(R.layout.activity_main);
 
         BuildMainTabHost();
         FirstRun();
-
-
+        CurrentAppVersion_long = VersionInfo();
+        SetAppVersionDescription(CurrentAppVersion_long);
 
 } //end of the main on create function
 
@@ -93,6 +118,13 @@ String sTextFromET = "";
     }
 
 
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService( CONNECTIVITY_SERVICE );
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     public void FuelClick(View view) {
         //Intent intent = new Intent(mai.this, ToActivity.class);
         Intent newintent = new Intent(MainActivity.this, FuelCalcActivity.class);
@@ -115,6 +147,13 @@ String sTextFromET = "";
         //Intent intent = new Intent(mai.this, ToActivity.class);
         Intent newintent = new Intent(MainActivity.this, CrewNetActivity.class);
         startActivity(newintent);
+    }
+    public void AdviceMainClick(View view) {
+        //Intent intent = new Intent(mai.this, ToActivity.class);
+        Toast.makeText(getApplicationContext(), "This feature is under development for future deployment.", Toast.LENGTH_LONG).show();
+        Intent newintent = new Intent(MainActivity.this,CrewAdviceActivity.class);
+        startActivity(newintent);
+
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -143,40 +182,35 @@ String sTextFromET = "";
         tab_tools.setIndicator("Tools");
         maintabhost.addTab(tab_tools);
 
-        TabHost.TabSpec tab_rostersAdvice= maintabhost.newTabSpec("My Life");
+        TabHost.TabSpec tab_rostersAdvice= maintabhost.newTabSpec("Rosters_Advices");
         tab_rostersAdvice.setContent(R.id.tab_rosters_advices);
-        tab_rostersAdvice.setIndicator("My Life");
+        tab_rostersAdvice.setIndicator("Rosters & Advices");
         maintabhost.addTab(tab_rostersAdvice);
 
 
+        if ( !isNetworkAvailable() ) { // loading offline
 
+        }
 
-
-
-        TabHost.TabSpec tab_docs= maintabhost.newTabSpec("Docs");
-        tab_docs.setContent(R.id.tab_documents);
-        tab_docs.setIndicator("Docs");
-        maintabhost.addTab(tab_docs);
+        //TabHost.TabSpec tab_docs= maintabhost.newTabSpec("Docs");
+        //tab_docs.setContent(R.id.tab_documents);
+        //tab_docs.setIndicator("Docs");
+        //maintabhost.addTab(tab_docs);
 
         //maintabhost.getTabWidget().getChildTabViewAt(2).getLayoutParams().height = 100;
         maintabhost.getTabWidget().getChildTabViewAt(2).getLayoutParams().width = 100;
         //maintabhost.getTabWidget().getChildTabViewAt(2).setBackgroundColor(Color.WHITE);
 
-        //setup the web view
-        WebView main_webView;
-        main_webView = (WebView) findViewById(R.id.webView);
 
-        main_webView.setWebViewClient(new MyWebViewClient());
 
-        main_webView.getSettings().setJavaScriptEnabled(true);
-        main_webView.loadUrl("http://www.google.com");
-        //end of webview setup
         //end of tab host setup
 
 
         //set the start tab
         maintabhost.setCurrentTab(0);
     }
+
+
 
 public void FirstRun() {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -194,23 +228,32 @@ public void FirstRun() {
         GlobalManagement.SetupAppGlobals();
         //Check for SaveDIR if does not exsist make it
         savePreferences("FirstRun","no");
-        savePreferences("CurrentRoster","null");
-        savePreferences("NextRoster","null");
-        savePreferences("LastRoster","null");
-        savePreferences("Crewbrief","null");
+        savePreferences("CurrentRoster","0");
+        savePreferences("NextRoster","0");
+        savePreferences("LastRoster","0");
+        savePreferences("Crewbrief","0");
+        savePreferences("CrewnetLoginFails","0");
 
 
     } else {
+        //Long myCurrentTimeMillis = System.currentTimeMillis();
+        //SimpleDateFormat sdf_test = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        //Date roster_stored_time = null;
+
+        //roster_stored_time = new Date(myCurrentTimeMillis);
+        //sdf_reports.format(roster_stored_time);
+
+        //savePreferences("FirstRun","null");  //so that it pops up every time for testing
+        //savePreferences("CurrentRoster", sdf_test.format(roster_stored_time));  //so that it pops up every time for testing
+        //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //SharedPreferences.Editor editor = sharedPreferences.edit();
+        //editor.remove("FirstRun");
+        //editor.commit();
+
         // handle the value
     }
 }
 
-    public void loadSavedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = sharedPreferences.getString("UsersName", "test");
-        //UsersName.setText(name);
-
-    }
 
     public void savePreferences(String key, String value) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -252,6 +295,7 @@ public void FirstRun() {
            final Button DismissButton = (Button) layout.findViewById(R.id.button_welcomepopup_dismiss);
            final PopupWindow Welcome_popupWindow = new PopupWindow(layout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
 
+
            Welcome_popupWindow.setFocusable(false);
            Welcome_popupWindow.setTouchable(true);
            Welcome_popupWindow.setOutsideTouchable(true);
@@ -260,6 +304,7 @@ public void FirstRun() {
 
                public void run() {
                    Welcome_popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
                    DismissButton.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
@@ -274,6 +319,29 @@ public void FirstRun() {
 
        }
 
+    public String VersionInfo(){
+        Context context = getApplicationContext(); // or activity.getApplicationContext()
+        PackageManager packageManager = context.getPackageManager();
+        String packageName = context.getPackageName();
+
+        String myVersionName = "not available"; // initialize String
+
+        try {
+            myVersionName = packageManager.getPackageInfo(packageName, 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("MY Apps current version is " + myVersionName);
+        return myVersionName;
+    }
+
+public void SetAppVersionDescription(String AppLongVer)
+{
+    String AppVerionDescriptor_welcome;
+    AppVerionDescriptor_welcome ="Welcome to CM3 V" + AppLongVer;
+    TextView AppVerTxt = (TextView) findViewById(R.id.textView_mainUI_WelcomeMsgTOPheader);
+    AppVerTxt.setText(AppVerionDescriptor_welcome);
+}
 
     //end of my code
 

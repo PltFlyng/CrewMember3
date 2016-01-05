@@ -1,17 +1,12 @@
-package com.example.danielhutchinson.lialpatools;
+package com.cm3.danielhutchinson.lialpatools;
 
-import android.app.FragmentTransaction;
-import android.content.pm.PackageInfo;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -35,10 +30,8 @@ public class AboutActivity extends ActionBarActivity {
         String VersionData = VersionInfo();
 
         VersionDisplay = (TextView) findViewById(R.id.textview_ui_about_versionInfo);
-        VersionDisplay.setText("CM3 Version 1.1b");
-        About_changelog_txtview = (TextView) findViewById(R.id.textview_about_changelog);
-        About_changelog_txtview.setText("Change Log \n\n" + About_changelog);
-        //end of code for the main on create
+        VersionDisplay.setText("CM3 Version " + VersionData);
+
 
 
     }
@@ -59,9 +52,17 @@ public class AboutActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfState ment
         if (id == R.id.action_settings) {
+            Intent newintent = new Intent(AboutActivity.this, UserDetailsActivity.class);
+            startActivity(newintent);
+
             return true;
         }
 
+        if (id == R.id.action_about) {
+            Intent newintent = new Intent(AboutActivity.this, AboutActivity.class);
+            startActivity(newintent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -89,14 +90,13 @@ public class AboutActivity extends ActionBarActivity {
     }
 
     public String VersionInfo(){
-        PackageInfo pInfo = null;
+        String version = "";
         try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("tag", e.getMessage());
         }
-        String version = pInfo.versionName;
-
+System.out.println("version is " + version);
         return version;
     }
 

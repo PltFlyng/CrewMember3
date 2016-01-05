@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.danielhutchinson.lialpatools"
-    android:versionCode="2"
-    android:versionName="1.1b" >
+    package="com.cm3.danielhutchinson.lialpatools"
+    android:versionCode="6"
+    android:versionName="1.23b">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,23 +30,25 @@
             android:name=".FuelCalcActivity"
             android:label="Fuel"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.danielhutchinson.lialpatools.MainActivity" />
+                android:value="com.cm3.danielhutchinson.lialpatools.MainActivity" />
         </activity>
         <activity
             android:name=".WindComponentActivity"
             android:label="Wind Calculator"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.danielhutchinson.lialpatools.MainActivity" />
+                android:value="com.cm3.danielhutchinson.lialpatools.MainActivity" />
         </activity>
         <activity
             android:name=".FlightDutyTimeMainActivity"
             android:label="Flight &amp; Duty Time"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android .support.PARENT_ACTIVITY"
                 android:value="com.example.danielhutchinson.lialpatools.MainActivity" />
@@ -51,26 +56,42 @@
         <activity
             android:name=".AboutActivity"
             android:label="About"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.danielhutchinson.lialpatools.MainActivity" />
+                android:value="com.cm3.danielhutchinson.lialpatools.MainActivity" />
         </activity>
         <activity
             android:name=".UserDetailsActivity"
             android:label="Settings"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.danielhutchinson.lialpatools.MainActivity" />
+                android:value="com.cm3.danielhutchinson.lialpatools.MainActivity" />
         </activity>
         <activity
             android:name=".CrewNetActivity"
-            android:label="My Life"
-            android:parentActivityName=".MainActivity" >
+            android:label="CrewNet"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.danielhutchinson.lialpatools.MainActivity" />
+                android:value="com.cm3.danielhutchinson.lialpatools.MainActivity" />
+        </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c0fe340a4866bbcb321b8ebbf674cc420453ad95" />
+
+        <activity
+            android:name=".CrewAdviceActivity"
+            android:label="@string/title_activity_crew_advice"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cm3.danielhutchinson.lialpatools.MainActivity" />
         </activity>
     </application>
 

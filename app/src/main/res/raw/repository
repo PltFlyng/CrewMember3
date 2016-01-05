@@ -1,4 +1,14 @@
+ final TwitterListTimeline timeline = new TwitterListTimeline.Builder()
+                .slugWithOwnerScreenName("cm3-list", "Cm3Dd")
+                .build();
+        final TweetTimelineListAdapter adapter = new TweetTimelineListAdapter.Builder(this)
+                .setTimeline(timeline)
+                .build();
+        setListAdapter(adapter);
 
+
+ Boolean LoginLimitExceded = failedLoginExceded();
+NextRosterAvailable
 public void displaypdf(String FileName) {
 
         File file = null;
@@ -182,5 +192,24 @@ public void displaypdf(String FileName) {
             reader.close();
             Log.d("Http response", SB.toString());
 
-
         }
+
+
+         String inputLine = null;
+               if (Operation.equals("PreCheck"))
+               {
+                   inputLine = in.readLine();
+                   System.out.println("Current Server version: " + inputLine);  //test output for the log
+                   sb.append((inputLine + "\n"));
+               }
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,30 @@
+24/12/2015
+Minor Bug fixes
 
+
+2/9/2015
+--New
+Added the change log to the welcome screen under "whats new"
+
+-Bug Fix
+--Fixed a bug where after downloading one report downloading a second report would initially show the progress at 100% before showing the actual progress.
+
+This was only really noticeable on slower connections.
+
+21/8/2015
+-Bug fix applied to crewnet section. Next roster button will no longer be active when the next roster is not actually available.
+
+11/8/2015 - Revision 1.21b
+
+CrewNet revisions
+
+---Crewnet section has been revised, all download buttons are now inactive untill credentials have been verified.
+   This is to assist with the problem of users clicking the buttons multiple times with wrong credentials and locking them selves out.
+---After 3 failed login attempts a popup will appear prompting the user to check the status off crew net, verify their credentials in a browser and confirm they do not have any change password directives active.
+
+7/8/2015
+CM3 has been upgraded to version 1.2b for beta testers.
+CrewNet Functionality has been added under the rosters and advices tab.
 
 18/7/2015
 Conversion factor for Litres of Jet A1 to Lbs has been corrected and now uses 1.83 lbs/litre.

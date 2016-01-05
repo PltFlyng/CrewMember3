@@ -1,6 +1,5 @@
-package com.example.danielhutchinson.lialpatools;
+package com.cm3.danielhutchinson.lialpatools;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class FuelCalcActivity extends ActionBarActivity {
@@ -120,6 +118,15 @@ public class FuelCalcActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent newintent = new Intent(FuelCalcActivity.this, UserDetailsActivity.class);
+            startActivity(newintent);
+
+            return true;
+        }
+
+        if (id == R.id.action_about) {
+            Intent newintent = new Intent(FuelCalcActivity.this, AboutActivity.class);
+            startActivity(newintent);
             return true;
         }
 

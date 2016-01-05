@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_fuel_calc">FuelCalcActivity</string>
     <string name="header_fuelcalc">Fuel Calculator</string>
@@ -31,8 +31,7 @@
         <item>US. Gal</item>
         <item>Litre</item>
         <item>Imp. Gal</item>
-     </string-array>
-
+    </string-array>
 
 
     <string-array name="sports_array">
@@ -84,7 +83,7 @@
     <string name="DutyUI_label_duty_limit">Duty Limit:</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="DutyMainUi_label_OrigReport">DutyMainUI_label_Origonal Checkin:</string>
-    <string name="textview_ui_main_welcome_label">Welcome to CM3 v1.1b</string>
+    <string name="textview_ui_main_welcome_label">Welcome to CM3 v1.22b</string>
     <string name="title_activity_user_details">UserDetailsActivity</string>
     <string name="user_data_label_usersName">Name:</string>
     <string name="user_details_crewnetID">CrewNet ID:</string>
@@ -102,5 +101,11 @@
     <string name="button_label_storedLastRoster">Stored Last Roster\n  --/--/---- --:--</string>
     <string name="textview_ui_crewnet_mainheader">CrewNet</string>
     <string name="ui_label_crewnet_topnotice_default">Use the buttons below to access the desired reports</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="textview_crewnet_no_credentials_msg">You need to set your crewnet credentials in order to access the crewnet functionality.</string>
+    <string name="label_userdetails_ui_email">Email</string>
+    <string name="loginattemps_exceded_header">WARNING: \nYou have exceded the maximum number of allowed login attempts.</string>
+    <string name="Welcome_popup_ui_label">Whats new in this version of CM3....</string>
+    <string name="title_activity_crew_advice">CrewAdviceActivity</string>
 
 </resources>
